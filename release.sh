@@ -6,7 +6,7 @@
 # Semantic Versioning: http://semver.org/
 
 GITHUB_PLUGIN_NAME=gravityformsconnectwise
-WP_PLUGIN_NAME=gravityformsconnectwise
+WP_PLUGIN_NAME=connectwise-forms-integration
 BASE_DIR=`pwd`
 TMP_DIR=$BASE_DIR/tmp
 
