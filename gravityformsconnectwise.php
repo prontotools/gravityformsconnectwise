@@ -18,3 +18,7 @@ class GF_ConnectWise_Bootstrap {
     }
 
 }
+
+function gf_connectwise() {
+    return GFConnectWise::get_instance();
+}

@@ -1,54 +1,100 @@
 <?php
 require_once WP_PLUGIN_DIR . "/gravityforms/gravityforms.php";
 require_once WP_PLUGIN_DIR . "/gravityformsconnectwise/class-gf-connectwise.php";
+require_once 'vendor/autoload.php';
 
-class GravityFormsConnectWiseAddOnTest extends PHPUnit_Framework_TestCase {
-    public function setUp() {
+class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
+    function setUp() {
         parent::setUp();
 
         $this->connectwise_plugin = new GFConnectWise();
-
         $this->slug = "gravityformsaddon_connectwise_settings";
     }
 
-    function test_addon_settings_should_have_fields() {
-        $actual = $this->connectwise_plugin->plugin_settings_fields()[0];
+    function tearDown() {
+        $this->reset_phpmailer_instance();
 
-        $this->assertEquals( count( $actual["fields"] ), 4 );
+        parent::tearDown();
+    } 
+
+    function tests_retrieve_phpmailer_instance() {
+        $mailer = false;
+
+        if ( isset( $GLOBALS['phpmailer'] ) ) {
+            $mailer = $GLOBALS['phpmailer'];
+        }
+
+        return $mailer;
+    }
+
+    function reset_phpmailer_instance() {
+        $mailer = $this->tests_retrieve_phpmailer_instance();
+    
+        if ( $mailer && isset( $mailer->mock_sent ) ) {
+            unset( $mailer->mock_sent );
+            return true;
+        }
+
+        return false;
+    }
+
+    function test_addon_settings_should_have_fields() {
+        $actual = $this->connectwise_plugin->plugin_settings_fields();
+
+        $this->assertEquals( count( $actual[0]["fields"] ), 4 );
 
         $expected_description  = "<p>Complete the settings below to authenticate with your ConnectWise account. ";
         $expected_description .= '<a href="https://pronto.zendesk.com/hc/en-us/articles/207946586" target="_blank">';
         $expected_description .= "Here's how to generate API keys.</a></p>";
 
-        $this->assertEquals( $actual["description"], $expected_description );
+        $this->assertEquals( $actual[0]["description"], $expected_description );
 
-        $this->assertEquals( $actual["fields"][0]["name"], "connectwise_url" );
-        $this->assertEquals( $actual["fields"][0]["label"], "ConnectWise URL" );
-        $this->assertEquals( $actual["fields"][0]["type"], "text" );
-        $this->assertEquals( $actual["fields"][0]["class"], "medium" );
-        $this->assertTrue( array_key_exists( "save_callback", $actual["fields"][0] ) );
-        $this->assertTrue( array_key_exists( "feedback_callback", $actual["fields"][0] ) );
+        $this->assertEquals( $actual[0]["fields"][0]["name"], "connectwise_url" );
+        $this->assertEquals( $actual[0]["fields"][0]["label"], "ConnectWise URL" );
+        $this->assertEquals( $actual[0]["fields"][0]["type"], "text" );
+        $this->assertEquals( $actual[0]["fields"][0]["class"], "medium" );
+        $this->assertEquals( $actual[0]["fields"][0]["tooltip"], "<h6>ConnectWise URL</h6>The URL you use to login to ConnectWise. You don&#039;t need to include https:// or anything after .com/.net. For example, just enter &quot;cw.yourcompany.com&quot;. If you use a hosted version, you can use that URL (na.myconnectwise.net)." );
+        $this->assertTrue( array_key_exists( "save_callback", $actual[0]["fields"][0] ) );
+        $this->assertTrue( array_key_exists( "feedback_callback", $actual[0]["fields"][0] ) );
 
-        $this->assertEquals( $actual["fields"][1]["name"], "company_id" );
-        $this->assertEquals( $actual["fields"][1]["label"], "Company ID" );
-        $this->assertEquals( $actual["fields"][1]["type"], "text" );
-        $this->assertEquals( $actual["fields"][1]["class"], "small" );
-        $this->assertTrue( array_key_exists( "save_callback", $actual["fields"][1] ) );
-        $this->assertTrue( array_key_exists( "feedback_callback", $actual["fields"][1] ) );
+        $this->assertEquals( $actual[0]["fields"][1]["name"], "company_id" );
+        $this->assertEquals( $actual[0]["fields"][1]["label"], "Company ID" );
+        $this->assertEquals( $actual[0]["fields"][1]["type"], "text" );
+        $this->assertEquals( $actual[0]["fields"][1]["class"], "small" );
+        $this->assertTrue( array_key_exists( "save_callback", $actual[0]["fields"][1] ) );
+        $this->assertTrue( array_key_exists( "feedback_callback", $actual[0]["fields"][1] ) );
 
-        $this->assertEquals( $actual["fields"][2]["name"], "public_key" );
-        $this->assertEquals( $actual["fields"][2]["label"], "Public API Key" );
-        $this->assertEquals( $actual["fields"][2]["type"], "text" );
-        $this->assertEquals( $actual["fields"][2]["class"], "small" );
-        $this->assertTrue( array_key_exists( "save_callback", $actual["fields"][1] ) );
-        $this->assertTrue( array_key_exists( "feedback_callback", $actual["fields"][1] ) );
+        $this->assertEquals( $actual[0]["fields"][2]["name"], "public_key" );
+        $this->assertEquals( $actual[0]["fields"][2]["label"], "Public API Key" );
+        $this->assertEquals( $actual[0]["fields"][2]["type"], "text" );
+        $this->assertEquals( $actual[0]["fields"][2]["class"], "small" );
+        $this->assertTrue( array_key_exists( "save_callback", $actual[0]["fields"][2] ) );
+        $this->assertTrue( array_key_exists( "feedback_callback", $actual[0]["fields"][2] ) );
 
-        $this->assertEquals( $actual["fields"][3]["name"], "private_key" );
-        $this->assertEquals( $actual["fields"][3]["label"], "Private API Key" );
-        $this->assertEquals( $actual["fields"][3]["type"], "text" );
-        $this->assertEquals( $actual["fields"][3]["class"], "small" );
-        $this->assertTrue( array_key_exists( "save_callback", $actual["fields"][2] ) );
-        $this->assertTrue( array_key_exists( "feedback_callback", $actual["fields"][2] ) );
+        $this->assertEquals( $actual[0]["fields"][3]["name"], "private_key" );
+        $this->assertEquals( $actual[0]["fields"][3]["label"], "Private API Key" );
+        $this->assertEquals( $actual[0]["fields"][3]["type"], "text" );
+        $this->assertEquals( $actual[0]["fields"][3]["class"], "small" );
+        $this->assertTrue( array_key_exists( "save_callback", $actual[0]["fields"][3] ) );
+        $this->assertTrue( array_key_exists( "feedback_callback", $actual[0]["fields"][3] ) );
+
+        $this->assertEquals( count( $actual[1]["fields"] ), 2 );
+
+        $this->assertEquals( $actual[1]["title"], "Error Notifications" );
+
+        $this->assertEquals( $actual[1]["fields"][0]["name"], "error_notification_emails_to" );
+        $this->assertEquals( $actual[1]["fields"][0]["label"], "Email Address" );
+        $this->assertEquals( $actual[1]["fields"][0]["type"], "text" );
+        $this->assertEquals( $actual[1]["fields"][0]["class"], "small" );
+        $this->assertTrue( array_key_exists( "save_callback", $actual[1]["fields"][0] ) );
+        $this->assertTrue( array_key_exists( "feedback_callback", $actual[1]["fields"][0] ) );
+
+        $this->assertEquals( $actual[1]["fields"][1]["name"], "error_notification_emails_action" );
+        $this->assertEquals( $actual[1]["fields"][1]["label"], "" );
+        $this->assertEquals( $actual[1]["fields"][1]["type"], "checkbox" );
+        $this->assertEquals( $actual[1]["fields"][1]["class"], "small" );
+        $this->assertEquals( $actual[1]["fields"][1]["choices"][0]["name"], "enable_error_notification_emails" );
+        $this->assertEquals( $actual[1]["fields"][1]["choices"][0]["label"], "Enable error notification emails" );
     }
 
     function test_settings_should_has_override_form_settings_style() {
@@ -60,7 +106,7 @@ class GravityFormsConnectWiseAddOnTest extends PHPUnit_Framework_TestCase {
     }
 
     function test_setting_field_should_clean_before_save() {
-        $username = "<h2>auth_key</h2>";
+        $username = "<h2> auth_key</h2>";
 
         $actual = $this->connectwise_plugin->clean_field( "username", $username );
 
@@ -157,6 +203,22 @@ class GravityFormsConnectWiseAddOnTest extends PHPUnit_Framework_TestCase {
             "GET",
             NULL
         );
+    }
+
+    function test_input_valid_email_should_return_true() {
+        $email = "admin@mail.com";
+
+        $actual = $this->connectwise_plugin->is_valid_email_settings( $email );
+
+        $this->assertTrue( $actual );
+    }
+
+    function test_input_invalid_email_should_return_false() {
+        $email = "admin@";
+
+        $actual = $this->connectwise_plugin->is_valid_email_settings( $email );
+
+        $this->assertFalse( $actual );
     }
 
     function test_save_valid_form_settings_should_return_true() {
@@ -298,6 +360,10 @@ class GravityFormsConnectWiseAddOnTest extends PHPUnit_Framework_TestCase {
         );
 
         $mock_departments_response = array(
+            array(
+                "value" => NULL,
+                "label" => "---------------",
+            ),
             array(
                 "value" => "1",
                 "label" => "Accounting",
@@ -474,7 +540,7 @@ class GravityFormsConnectWiseAddOnTest extends PHPUnit_Framework_TestCase {
         $service_priority_choices      = $service_ticket_fields["fields"][2]["choices"];
         $company_type_choices          = $company_fields["fields"][1]["choices"];
         $company_statuses_choices      = $company_fields["fields"][2]["choices"];
-        $activity_type_choices         = $activity_fields["fields"][2]["choices"];
+        $activity_type_choices         = $activity_fields["fields"][3]["choices"];
 
         $this->assertEquals( $base_fields["title"], "ConnectWise" );
         $this->assertEquals( $base_fields["fields"][0]["label"], "Feed name" );
@@ -482,10 +548,11 @@ class GravityFormsConnectWiseAddOnTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals( $base_fields["fields"][0]["name"], "feed_name" );
         $this->assertEquals( $base_fields["fields"][0]["class"], "small" );
         $this->assertEquals( $base_fields["fields"][0]["required"], true );
-        $this->assertEquals( $base_fields["fields"][0]["tooltip"], "&lt;h6&gt;Name&lt;/h6&gt;&lt;/br&gt;Enter a feed name to uniquely identify this setup." );
+        $this->assertEquals( $base_fields["fields"][0]["tooltip"], "&lt;h6&gt;Name&lt;/h6&gt;Enter a feed name to uniquely identify this setup." );
         $this->assertEquals( $base_fields["fields"][1]["name"], "action" );
         $this->assertEquals( $base_fields["fields"][1]["label"], "Action" );
         $this->assertEquals( $base_fields["fields"][1]["type"], "checkbox" );
+        $this->assertEquals( $base_fields["fields"][1]["tooltip"], "&lt;h6&gt;Action&lt;/h6&gt;When a feed is active, a Contact and Company lookup will happen each time. You can also set for an Opportunity, Activity and/or Service Ticket to be created.&lt;/br&gt;An Opportunity must be created in order to create an Activity." );
         $this->assertEquals( $base_fields["fields"][1]["onclick"], "jQuery(this).parents(\"form\").submit();" );
         $this->assertEquals( $base_fields["fields"][1]["choices"][0]["name"], "create_opportunity" );
         $this->assertEquals( $base_fields["fields"][1]["choices"][0]["label"], "Create New Opportunity" );
@@ -500,8 +567,7 @@ class GravityFormsConnectWiseAddOnTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals( $contact_fields["fields"][0]["type"], "field_map" );
         $this->assertTrue( array_key_exists( "field_map", $contact_fields["fields"][0] ) );
 
-        $expected  = "Select which Gravity Form fields pair with their ";
-        $expected .= "respective ConnectWise fields.";
+        $expected  = "&lt;h6&gt;Contact Map Fields&lt;/h6&gt;Select which Gravity Form fields pair with their respective ConnectWise fields.";
         $this->assertEquals( $contact_fields["fields"][0]["tooltip"], $expected );
 
         $this->assertEquals( $contact_fields["fields"][1]["name"], "contact_type" );
@@ -516,11 +582,13 @@ class GravityFormsConnectWiseAddOnTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals( $contact_fields["fields"][2]["name"], "contact_department" );
         $this->assertEquals( $contact_fields["fields"][2]["label"], "Department" );
         $this->assertEquals( $contact_fields["fields"][2]["type"], "select" );
-        $this->assertEquals( count( $contact_department_choices ), 2 );
-        $this->assertEquals( $contact_department_choices[0]["value"], "1" );
-        $this->assertEquals( $contact_department_choices[0]["label"], "Accounting" );
-        $this->assertEquals( $contact_department_choices[1]["value"], "2" );
-        $this->assertEquals( $contact_department_choices[1]["label"], "Sales" );
+        $this->assertEquals( count( $contact_department_choices ), 3 );
+        $this->assertEquals( $contact_department_choices[0]["value"], NULL );
+        $this->assertEquals( $contact_department_choices[0]["label"], "---------------" );
+        $this->assertEquals( $contact_department_choices[1]["value"], "1" );
+        $this->assertEquals( $contact_department_choices[1]["label"], "Accounting" );
+        $this->assertEquals( $contact_department_choices[2]["value"], "2" );
+        $this->assertEquals( $contact_department_choices[2]["label"], "Sales" );
 
         $this->assertEquals( $contact_fields["fields"][3]["name"], "contact_note" );
         $this->assertEquals( $contact_fields["fields"][3]["label"], "Notes" );
@@ -539,6 +607,7 @@ class GravityFormsConnectWiseAddOnTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals( $company_fields["fields"][3]["type"], "checkbox" );
         $this->assertEquals( $company_fields["fields"][3]["choices"][0]["label"], "Mark this company as a lead" );
         $this->assertEquals( $company_fields["fields"][3]["choices"][0]["name"], "company_as_lead" );
+        $this->assertEquals( $company_fields["fields"][3]["choices"][0]["tooltip"], "&lt;h6&gt;Mark this company as a lead&lt;/h6&gt;Checking this will tick the &quot;Is this company a lead?&quot; checkbox in the Company&#039;s Profile setting" );
 
         $this->assertEquals( $company_fields["fields"][4]["name"], "company_note" );
         $this->assertEquals( $company_fields["fields"][4]["label"], "Notes" );
@@ -557,8 +626,7 @@ class GravityFormsConnectWiseAddOnTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals( $company_statuses_choices[1]["value"], "2" );
         $this->assertEquals( $company_statuses_choices[1]["label"], "Imported" );
 
-        $expected  = "Select which Gravity Form fields pair with their ";
-        $expected .= "respective ConnectWise fields.";
+        $expected  = "&lt;h6&gt;Company Map Fields&lt;/h6&gt;Select which Gravity Form fields pair with their respective ConnectWise fields.";
         $this->assertEquals( $company_fields["fields"][0]["tooltip"], $expected );
 
         $this->assertEquals( $service_ticket_fields["title"], "Service Ticket Details" );
@@ -606,17 +674,25 @@ class GravityFormsConnectWiseAddOnTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals( $opportunity_fields["fields"][2]["name"], "marketing_campaign" );
         $this->assertEquals( $opportunity_fields["fields"][2]["label"], "Marketing Campaign" );
         $this->assertEquals( $opportunity_fields["fields"][2]["type"], "select" );
+        $this->assertEquals( $opportunity_fields["fields"][2]["tooltip"], "&lt;h6&gt;Marketing Campaign&lt;/h6&gt;Any Campaign you create in the Marketing section will be available here for you to attach to the Opportunity." );
         $this->assertEquals( $opportunity_fields["fields"][3]["name"], "opportunity_owner" );
         $this->assertEquals( $opportunity_fields["fields"][3]["label"], "Sales Rep" );
         $this->assertEquals( $opportunity_fields["fields"][3]["type"], "select" );
-        $this->assertEquals( $opportunity_fields["fields"][4]["name"], "opportunity_source" );
-        $this->assertEquals( $opportunity_fields["fields"][4]["label"], "Source" );
+        $this->assertEquals( $opportunity_fields["fields"][4]["name"], "opportunity_closedate" );
+        $this->assertEquals( $opportunity_fields["fields"][4]["required"], true );
+        $this->assertEquals( $opportunity_fields["fields"][4]["label"], "Close Date" );
         $this->assertEquals( $opportunity_fields["fields"][4]["type"], "text" );
-        $this->assertEquals( $opportunity_fields["fields"][4]["class"], "medium" );
-        $this->assertEquals( $opportunity_fields["fields"][5]["name"], "opportunity_note" );
-        $this->assertEquals( $opportunity_fields["fields"][5]["label"], "Notes" );
-        $this->assertEquals( $opportunity_fields["fields"][5]["type"], "textarea" );
-        $this->assertEquals( $opportunity_fields["fields"][5]["class"], "medium merge-tag-support" );
+        $this->assertEquals( $opportunity_fields["fields"][4]["class"], "small" );
+        $this->assertEquals( $opportunity_fields["fields"][4]["tooltip"], "<h6>Close Date</h6>Enter the number of days the Opportunity should remain open. For example, entering &quot;30&quot; means the Opportunity will close 30 days after it&#039;s created." );
+        $this->assertEquals( $opportunity_fields["fields"][4]["default_value"], "30" );
+        $this->assertEquals( $opportunity_fields["fields"][5]["name"], "opportunity_source" );
+        $this->assertEquals( $opportunity_fields["fields"][5]["label"], "Source" );
+        $this->assertEquals( $opportunity_fields["fields"][5]["type"], "text" );
+        $this->assertEquals( $opportunity_fields["fields"][5]["class"], "medium" );
+        $this->assertEquals( $opportunity_fields["fields"][6]["name"], "opportunity_note" );
+        $this->assertEquals( $opportunity_fields["fields"][6]["label"], "Notes" );
+        $this->assertEquals( $opportunity_fields["fields"][6]["type"], "textarea" );
+        $this->assertEquals( $opportunity_fields["fields"][6]["class"], "medium merge-tag-support" );
         $this->assertEquals( count( $opportunity_type_choices ), 3 );
         $this->assertEquals( $opportunity_type_choices[0]["value"], NULL );
         $this->assertEquals( $opportunity_type_choices[0]["label"], "---------------" );
@@ -649,10 +725,17 @@ class GravityFormsConnectWiseAddOnTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals( $activity_fields["fields"][1]["label"], "Assign To" );
         $this->assertEquals( $activity_fields["fields"][1]["type"], "select" );
 
-        $this->assertEquals( $activity_fields["fields"][3]["name"], "activity_note" );
-        $this->assertEquals( $activity_fields["fields"][3]["label"], "Notes" );
-        $this->assertEquals( $activity_fields["fields"][3]["type"], "textarea" );
-        $this->assertEquals( $activity_fields["fields"][3]["class"], "medium merge-tag-support" );
+        $this->assertEquals( $activity_fields["fields"][2]["name"], "activity_duedate" );
+        $this->assertEquals( $activity_fields["fields"][2]["label"], "Due Date" );
+        $this->assertEquals( $activity_fields["fields"][2]["type"], "text" );
+        $this->assertEquals( $activity_fields["fields"][2]["class"], "small" );
+        $this->assertEquals( $activity_fields["fields"][2]["required"], True );
+        $this->assertEquals( $activity_fields["fields"][2]["tooltip"], "<h6>Due Date</h6>Enter the number of days until the Activity should be due. For example, entering &quot;7&quot; means the Activity will be due 7 days after it&#039;s created." );
+
+        $this->assertEquals( $activity_fields["fields"][4]["name"], "activity_note" );
+        $this->assertEquals( $activity_fields["fields"][4]["label"], "Notes" );
+        $this->assertEquals( $activity_fields["fields"][4]["type"], "textarea" );
+        $this->assertEquals( $activity_fields["fields"][4]["class"], "medium merge-tag-support" );
 
         $this->assertEquals( count( $assign_to_member_choices), 2 );
         $this->assertEquals( $assign_to_member_choices[0]["value"], "Admin1" );
@@ -667,6 +750,13 @@ class GravityFormsConnectWiseAddOnTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals( $activity_type_choices[1]["label"], "Quote" );
 
         $this->assertEquals( $conditional_fields["dependency"][1], "show_conditional_logic_field" );
+        $this->assertEquals( $conditional_fields["title"], "Feed Conditional Logic");
+        $this->assertEquals( $conditional_fields["fields"][0]["type"], "feed_condition");
+        $this->assertEquals( $conditional_fields["fields"][0]["name"], "feed_condition");
+        $this->assertEquals( $conditional_fields["fields"][0]["label"], "Conditional Logic");
+        $this->assertEquals( $conditional_fields["fields"][0]["checkbox_label"], "Enable");
+        $this->assertEquals( $conditional_fields["fields"][0]["instructions"], "Export to ConnectWise if");
+        $this->assertEquals( $conditional_fields["fields"][0]["tooltip"], "<h6>Conditional Logic</h6>When conditional logic is enabled, form submissions will only be exported to ConnectWise when the condition is met. When disabled, all form submissions will be posted.");
     }
 
     function test_standard_fields_mapping_should_return_array_of_fields() {
@@ -1756,6 +1846,81 @@ class GravityFormsConnectWiseAddOnTest extends PHPUnit_Framework_TestCase {
         $GF_ConnectWise->process_feed( $feed, $lead, array() );
     }
 
+    function test_create_contact_with_default_value_should_create_contact() {
+        $feed = array(
+            "id" => "1",
+            "form_id" => "1",
+            "is_active" => "1",
+            "meta" => array(
+                "contact_map_fields_first_name" => "2.3",
+                "contact_map_fields_last_name"  => "2.6",
+                "contact_map_fields_email"      => "3",
+                "contact_type"                  => "1",
+                "contact_department"            => "---------------",
+                "company_type"                  => "1",
+                "company_status"                => "1",
+                "contact_note"                  => "Please call this contact",
+                "company_map_fields"            => array(
+                    array(
+                        "key"        => "company",
+                        "value"      => "2",
+                        "custom_key" => ""
+                    )
+                )
+            )
+        );
+
+        $lead = array(
+            "2.3" => "Test Firstname",
+            "2.6" => "Test Lastname",
+            "3"   => "test@test.com",
+            "2"   => "",
+            "2.2" => "",
+            "2.4" => "",
+            "2.8" => ""
+        );
+
+        $contact_data = array(
+            "firstName"          => "Test Firstname",
+            "lastName"           => "Test Lastname",
+            "note"               => "Please call this contact",
+            "company"            => array(
+                "identifier" => "Catchall",
+            ),
+            "type"               => array(
+                "id" => "1"
+            )
+        );
+
+        $note_data = array(
+            "text" => "Please call this contact"
+        );
+
+        $mock_contact_data = '{"id":1}';
+        $mock_contact_response = array(
+            "body" => $mock_contact_data
+        );
+
+        $GF_ConnectWise = $this->getMockBuilder( "GFConnectWise" )
+            ->setMethods( array( "send_request", "get_existing_contact" ) )
+            ->getMock();
+
+        $GF_ConnectWise->expects( $this->at( 0 ) )
+            ->method( "get_existing_contact" )
+            ->will( $this->returnValue( false ) );
+
+        $GF_ConnectWise->expects( $this->at( 1 ) )
+            ->method( "send_request" )
+            ->with(
+                "company/contacts",
+                "POST",
+                $contact_data
+            )
+            ->will( $this->returnValue( $mock_contact_response ) );
+
+        $GF_ConnectWise->process_feed( $feed, $lead, array() );
+    }
+
     function test_create_company_with_note_should_send_note_to_connectwise() {
         $feed = array(
             "id" => "1",
@@ -1974,6 +2139,177 @@ class GravityFormsConnectWiseAddOnTest extends PHPUnit_Framework_TestCase {
                             "company/companies/1",
                             "PATCH",
                             $company_update_data
+                       );
+
+        $GF_ConnectWise->process_feed( $feed, $lead, array() );
+    }
+    function test_primary_default_contact_data_not_work_should_use_contact_id() {
+        $feed = array(
+            "id" => "1",
+            "form_id" => "1",
+            "is_active" => "1",
+            "meta" => array(
+                "contact_map_fields_first_name"  => "2.3",
+                "contact_map_fields_last_name"   => "2.6",
+                "contact_map_fields_email"       => "3",
+                "contact_type"                   => "1",
+                "contact_department"             => "2",
+                "company_type"                   => "1",
+                "company_status"                 => "1",
+                "company_note"                   => "Here is a company note",
+                "company_map_fields"             => array(
+                    array(
+                        "key"        => "company",
+                        "value"      => "2",
+                        "custom_key" => ""
+                    )
+                )
+            )
+        );
+
+        $lead = array(
+            "2.3" => "Test Firstname",
+            "2.6" => "Test Lastname",
+            "3"   => "test@test.com",
+            "2"   => "Test Company",
+            "2.2" =>"",
+            "2.4" => "",
+            "2.8" => ""
+        );
+
+        $company_data = array(
+            "id"           => 0,
+            "identifier"   => "TestCompany",
+            "name"         => "Test Company",
+            "addressLine1" => "-",
+            "addressLine2" => "-",
+            "city"         => "-",
+            "state"        => "-",
+            "zip"          => "-",
+            "phoneNumber"  => NULL,
+            "faxNumber"    => NULL,
+            "website"      => NULL,
+            "note"         => "Here is a company note",
+            "type"         => array(
+                "id" => "1"
+            ),
+            "status"       => array(
+                "id" => "1"
+            )
+        );
+
+        $contact_data = array(
+            "firstName"          => "Test Firstname",
+            "lastName"           => "Test Lastname",
+            "company"            => array(
+                "identifier" => "TestCompany",
+            ),
+            "type"               => array(
+                "id" => "1"
+            ),
+            "department"         => array(
+                "id" => "2"
+            )
+        );
+
+        $comunication_types = array(
+            "value"             => "test@test.com",
+            "communicationType" => "Email",
+            "type"              => array(
+                "id"   => 1,
+                "name" => "Email"
+            ),
+            "defaultFlag" => true
+        );
+
+        $GF_ConnectWise = $this->getMockBuilder( "GFConnectWise" )
+                               ->setMethods( array( "send_request", "get_existing_contact" ) )
+                               ->getMock();
+
+        $GF_ConnectWise->expects( $this->at( 0 ) )
+                       ->method( "send_request" )
+                       ->with(
+                            "company/companies",
+                            "POST",
+                            $company_data
+                       );
+
+        $GF_ConnectWise->expects( $this->at( 1 ) )
+            ->method( "get_existing_contact" )
+            ->will( $this->returnValue( false ) );
+
+        $mock_contact_data = '{"id":20}';
+        $mock_contact_response = array(
+            "body" => $mock_contact_data
+        );
+
+        $company_update_data   = array(
+            array(
+                "op"    => "replace",
+                "path"  => "defaultContact",
+                "value" => json_decode( $mock_contact_response["body"] )
+            )
+        );
+
+        $company_update_data_with_id  = array(
+            array(
+                "op"    => "replace",
+                "path"  => "defaultContactId",
+                "value" => "20"
+            )
+        );
+
+        $GF_ConnectWise->expects( $this->at( 2 ) )
+                       ->method( "send_request" )
+                       ->with(
+                            "company/contacts",
+                            "POST",
+                            $contact_data
+                       )
+                       ->will( $this->returnValue( $mock_contact_response ) );
+
+        $GF_ConnectWise->expects( $this->at( 3 ) )
+                       ->method( "send_request" )
+                       ->with(
+                            "company/contacts/20/communications",
+                            "POST",
+                            $comunication_types
+                       );
+
+        $mock_company_response = array(
+            "body" => '[{"id": 1}]'
+        );
+
+        $mock_update_company_response = array(
+            "response" => array(
+                "code" => 400
+            )
+        );
+
+        $GF_ConnectWise->expects( $this->at( 4 ) )
+                       ->method( "send_request" )
+                       ->with(
+                            "company/companies?conditions=identifier='TestCompany'",
+                            "GET",
+                            NULL
+                       )
+                       ->will($this->returnValue( $mock_company_response ));
+
+        $GF_ConnectWise->expects( $this->at(5) )
+                       ->method( "send_request" )
+                       ->with(
+                            "company/companies/1",
+                            "PATCH",
+                            $company_update_data
+                       )
+                       ->will($this->returnValue( $mock_update_company_response ));
+
+        $GF_ConnectWise->expects( $this->at(6) )
+                       ->method( "send_request" )
+                       ->with(
+                            "company/companies/1",
+                            "PATCH",
+                            $company_update_data_with_id
                        );
 
         $GF_ConnectWise->process_feed( $feed, $lead, array() );
@@ -2353,6 +2689,7 @@ class GravityFormsConnectWiseAddOnTest extends PHPUnit_Framework_TestCase {
                 "company_status"                => "Active",
                 "create_opportunity"            => "1",
                 "opportunity_name"              => "Test OP from form",
+                "opportunity_closedate"         => "0",
                 "opportunity_owner"             => "Admin1",
                 "company_map_fields"            => array(),
                 "opportunity_type"              => "1",
@@ -2371,7 +2708,7 @@ class GravityFormsConnectWiseAddOnTest extends PHPUnit_Framework_TestCase {
             "2.8" => ""
         );
 
-        $expectedCloseDate = mktime( 0, 0, 0, date( "m" ) + 1, date( "d" ), date( "y" ) );
+        $expectedCloseDate = mktime( 0, 0, 0, date( "m" ), date( "d" ), date( "y" ) );
         $expectedCloseDate = date( "Y-m-d", $expectedCloseDate );
 
         $opportunity_data = array(
@@ -2485,6 +2822,7 @@ class GravityFormsConnectWiseAddOnTest extends PHPUnit_Framework_TestCase {
                 "create_opportunity"            => "1",
                 "opportunity_name"              => "Test OP from form",
                 "opportunity_owner"             => "Admin1",
+                "opportunity_closedate"         => "2",
                 "company_map_fields"            => array(),
                 "opportunity_type"              => "1",
                 "opportunity_note"              => "test note",
@@ -2502,7 +2840,7 @@ class GravityFormsConnectWiseAddOnTest extends PHPUnit_Framework_TestCase {
             "2.8" => ""
         );
 
-        $expectedCloseDate = mktime( 0, 0, 0, date( "m" ) + 1, date( "d" ), date( "y" ) );
+        $expectedCloseDate = mktime( 0, 0, 0, date( "m" ), date( "d" ) + 2, date( "y" ) );
         $expectedCloseDate = date( "Y-m-d", $expectedCloseDate );
 
         $opportunity_data = array(
@@ -2686,7 +3024,7 @@ class GravityFormsConnectWiseAddOnTest extends PHPUnit_Framework_TestCase {
             "defaultFlag"       => true
         );
 
-        $expectedCloseDate = mktime( 0, 0, 0, date( "m" ) + 1, date( "d" ), date( "y" ) );
+        $expectedCloseDate = mktime( 0, 0, 0, date( "m" ), date( "d" ) + 30, date( "y" ) );
         $expectedCloseDate = date( "Y-m-d", $expectedCloseDate );
         $opportunity_data = array(
             "name"   => $feed["meta"]["opportunity_name"],
@@ -2802,10 +3140,12 @@ class GravityFormsConnectWiseAddOnTest extends PHPUnit_Framework_TestCase {
                 "opportunity_name"              => "Test OP from form",
                 "opportunity_owner"             => "Admin1",
                 "opportunity_type"              => "1",
+                "opportunity_closedate"         => "31",
                 "create_activity"               => "1",
                 "activity_name"                 => "Follow up the client",
                 "activity_assigned_to"          => "Admin1",
                 "activity_type"                 => "1",
+                "activity_duedate"              => "5",
                 "activity_note"                 => "test activity note",
                 "company_type"                  => "1",
                 "company_status"                => "1",
@@ -2874,7 +3214,7 @@ class GravityFormsConnectWiseAddOnTest extends PHPUnit_Framework_TestCase {
             )
         );
 
-        $expectedCloseDate = mktime( 0, 0, 0, date( "m" ) + 1, date( "d" ), date( "y" ) );
+        $expectedCloseDate = mktime( 0, 0, 0, date( "m" ), date( "d" ) + 31, date( "y" ) );
         $expectedCloseDate = date( "Y-m-d", $expectedCloseDate );
         $opportunity_data = array(
             "name" => $feed["meta"]["opportunity_name"],
@@ -2901,7 +3241,7 @@ class GravityFormsConnectWiseAddOnTest extends PHPUnit_Framework_TestCase {
             ),
         );
 
-        $dueDate = mktime( 0, 0, 0, date( "m" ), date( "d" ) + 7, date( "y" ) );
+        $dueDate = mktime( 0, 0, 0, date( "m" ), date( "d" ) + 5, date( "y" ) );
         $dueDate = date( "Y-m-d", $dueDate );
         $activity_data = array(
             "name"  => "Follow up the client",
@@ -2927,8 +3267,8 @@ class GravityFormsConnectWiseAddOnTest extends PHPUnit_Framework_TestCase {
                 "name" => "Test OP from form"
             ),
             "notes"     => "test activity note",
-            "dateStart" => $dueDate . "T12:00:00Z",
-            "dateEnd"   => $dueDate . "T21:00:00Z"
+            "dateStart" => $dueDate . "T14:00:00Z",
+            "dateEnd"   => $dueDate . "T14:15:00Z"
         );
 
         $GF_ConnectWise = $this->getMockBuilder( "GFConnectWise" )
@@ -3102,7 +3442,7 @@ class GravityFormsConnectWiseAddOnTest extends PHPUnit_Framework_TestCase {
             )
         );
 
-        $expectedCloseDate = mktime( 0, 0, 0, date( "m" ) + 1, date( "d" ), date( "y" ) );
+        $expectedCloseDate = mktime( 0, 0, 0, date( "m" ), date( "d" ) + 30, date( "y" ) );
         $expectedCloseDate = date( "Y-m-d", $expectedCloseDate );
         $opportunity_data = array(
             "name" => $feed["meta"]["opportunity_name"],
@@ -3154,8 +3494,8 @@ class GravityFormsConnectWiseAddOnTest extends PHPUnit_Framework_TestCase {
                 "id"   => 1,
                 "name" => "Test OP from form"
             ),
-            "dateStart" => $dueDate . "T12:00:00Z",
-            "dateEnd"   => $dueDate . "T21:00:00Z"
+            "dateStart" => $dueDate . "T14:00:00Z",
+            "dateEnd"   => $dueDate . "T14:15:00Z"
         );
 
         $GF_ConnectWise = $this->getMockBuilder( "GFConnectWise" )
@@ -3254,7 +3594,7 @@ class GravityFormsConnectWiseAddOnTest extends PHPUnit_Framework_TestCase {
         $GF_ConnectWise->expects( $this->at( 0 ) )
             ->method( "send_request" )
             ->with(
-                "system/members",
+                "system/members?pageSize=200",
                 "GET",
                 NULL
             )
@@ -3273,6 +3613,38 @@ class GravityFormsConnectWiseAddOnTest extends PHPUnit_Framework_TestCase {
         );
 
         $this->assertEquals( $actual_member_list, $expected_member_list);
+    }
+
+    function test_campaign_api_should_return_correct_campaign_list() {
+        $GF_ConnectWise = $this->getMockBuilder( "GFConnectWise" )
+            ->setMethods( array( "send_request" ) )
+            ->getMock();
+
+        $mock_campaign_response = array(
+            "body" => '[{"id": "1", "name": "Test Campaign"}]'
+        );
+        $GF_ConnectWise->expects( $this->at( 0 ) )
+            ->method( "send_request" )
+            ->with(
+                "marketing/campaigns?pageSize=200",
+                "GET",
+                NULL
+            )
+            ->will( $this->returnValue( $mock_campaign_response ) );
+
+        $actual_campaign_list = $GF_ConnectWise->get_marketing_campaign();
+        $expected_campaign_list = array(
+            array(
+                "value" => NULL,
+                "label" => "---------------",
+            ),
+            array(
+                "value" => "1",
+                "label" => "Test Campaign",
+            )
+        );
+
+        $this->assertEquals( $actual_campaign_list, $expected_campaign_list);
     }
 
     function test_feed_list_column_should_return_correct_column() {
@@ -3297,5 +3669,138 @@ class GravityFormsConnectWiseAddOnTest extends PHPUnit_Framework_TestCase {
         $expected = "Create New Opportunity, Create New Activity, Create New Service Ticket";
 
         $this->assertEquals( $actual, $expected);
+    }
+
+    function test_connectwise_shouldnot_add_ads_js_for_phoenix_theme() {
+        switch_theme("Phoenix Child Theme 1");
+
+        $pronto_ads_js = array(
+            "handle"    => "pronto_ads_js",
+            "src"       => "http://example.org/wp-content/plugins/gravityformsconnectwise/js/pronto-ads.js",
+            "version"   => "1.1",
+            "deps"      => array( "jquery" ),
+            "enqueue"   =>
+                array(
+                    array(
+                        "admin_page"=> array( "form_settings", "plugin_settings" )
+                    )
+                )
+            );
+
+        $this->assertNotContains( $pronto_ads_js, $this->connectwise_plugin->scripts() );
+    }
+
+    function test_connectwise_should_add_ads_js_for_other_theme() {
+        switch_theme("Twenty Sixteen");
+
+        $pronto_ads_js = array(
+            "handle"    => "pronto_ads_js",
+            "src"       => "http://example.org/wp-content/plugins/gravityformsconnectwise/js/pronto-ads.js",
+            "version"   => "1.1",
+            "deps"      => array( "jquery" ),
+            "enqueue"   =>
+                array(
+                    array(
+                        "admin_page"=> array( "form_settings", "plugin_settings" )
+                    )
+                )
+            );
+
+        $this->assertContains( $pronto_ads_js, $this->connectwise_plugin->scripts() );
+    }
+
+    function test_error_response_from_connectwise_should_send_to_specific_email() {
+        $_SERVER["SERVER_NAME"] = 'example.org';
+
+        $this->reset_phpmailer_instance();
+
+        $settings = array(
+            "connectwise_url"                   => "",
+            "company_id"                        => "",
+            "public_key"                        => "",
+            "private_key"                       => "",
+            "enable_error_notification_emails"  => "1",
+            "error_notification_emails_to"      => "test@mail.com"
+        );
+
+        update_option( "gravityformsaddon_connectwise_settings", $settings );
+
+        $response_body = "{\"message\": \"contact object is invalid\"}";
+        $response_code = 400;
+        $url = "/apis/3.0/company/contacts";
+        $body = array("data" => "contacts");
+
+        $actual = $this->connectwise_plugin->send_error_notification( $response_body, $response_code, $url, $body );
+
+        $mailer = $this->tests_retrieve_phpmailer_instance();
+
+        $this->assertTrue( $actual );
+
+        $this->assertEquals( "Test Blog", $mailer->FromName );
+        $this->assertEquals( "noreply@example.org", $mailer->From );
+        $this->assertEquals( "[Gravity Forms Connectwise] ERROR", $mailer->Subject );
+        $this->assertEquals( "test@mail.com", $mailer->mock_sent[0]["to"][0][0] );
+
+        $expected = "URL => /apis/3.0/company/contacts";
+        $this->assertContains( $expected, $mailer->mock_sent[0]["body"] );
+        $expected = "data => {";
+        $this->assertContains( $expected, $mailer->mock_sent[0]["body"] );
+        $expected = "\"data\": \"contacts\"";
+        $this->assertContains( $expected, $mailer->mock_sent[0]["body"] );
+        $expected = "Response[code] => 400";
+        $this->assertContains( $expected, $mailer->mock_sent[0]["body"] );
+        $expected = "Response[body] => {\"message\": \"contact object is invalid\"}";
+        $this->assertContains( $expected, $mailer->mock_sent[0]["body"] );
+        $expected = "---------";
+        $this->assertContains( $expected, $mailer->mock_sent[0]["body"] );
+        $expected = "Configure error notifications: ";
+        $expected .= "http://example.org/wp-admin/admin.php";
+        $expected .= "?page=gf_settings&subview=connectwise";
+        $this->assertContains( $expected, $mailer->mock_sent[0]["body"] );
+        $expected = "Install the Gravity Forms Logging Add-on to view the complete error log: ";
+        $expected .= "https://www.gravityhelp.com/documentation/article/logging-add-on/";
+        $this->assertContains( $expected, $mailer->mock_sent[0]["body"] );
+    }
+
+    function test_error_response_from_connectwise_should_send_to_admin_email() {
+        $_SERVER["SERVER_NAME"] = 'example.org';
+
+        $this->reset_phpmailer_instance();
+
+        $response_body = "{\"message\": \"contact object is invalid\"}";
+        $response_code = 400;
+        $url = "/apis/3.0/company/contacts";
+        $body = array("data" => "contacts");
+
+        $actual = $this->connectwise_plugin->send_error_notification( $response_body, $response_code, $url, $body );
+
+        $mailer = $this->tests_retrieve_phpmailer_instance();
+
+        $this->assertTrue( $actual );
+
+        $this->assertEquals( "Test Blog", $mailer->FromName );
+        $this->assertEquals( "noreply@example.org", $mailer->From );
+        $this->assertEquals( "[Gravity Forms Connectwise] ERROR", $mailer->Subject );
+        $this->assertEquals( "admin@example.org", $mailer->mock_sent[0]["to"][0][0] );
+
+        $expected = "URL => /apis/3.0/company/contacts";
+        $this->assertContains( $expected, $mailer->mock_sent[0]["body"] );
+        $expected = "data => {";
+        $this->assertContains( $expected, $mailer->mock_sent[0]["body"] );
+        $expected = "\"data\": \"contacts\"";
+        $this->assertContains( $expected, $mailer->mock_sent[0]["body"] );
+        $expected = "Response[code] => 400";
+        $this->assertContains( $expected, $mailer->mock_sent[0]["body"] );
+        $expected = "Response[body] => {\"message\": \"contact object is invalid\"}";
+        $this->assertContains( $expected, $mailer->mock_sent[0]["body"] );
+        $expected = "---------";
+        $this->assertContains( $expected, $mailer->mock_sent[0]["body"] );
+        $expected = "Configure error notifications: ";
+        $expected .= "http://example.org/wp-admin/admin.php";
+        $expected .= "?page=gf_settings&subview=connectwise";
+        $this->assertContains( $expected, $mailer->mock_sent[0]["body"] );
+        $expected = "Install the Gravity Forms Logging Add-on to view the complete error log: ";
+        $expected .= "https://www.gravityhelp.com/documentation/article/logging-add-on/";
+        $this->assertContains( $expected, $mailer->mock_sent[0]["body"] );
     }
 }

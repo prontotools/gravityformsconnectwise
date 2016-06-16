@@ -1,3 +1,17 @@
-#gaddon-setting-row-company_map_fields > td, #gaddon-setting-row-company_map_fields .repeater th {
+#gaddon-setting-row-company_map_fields > td, 
+#gaddon-setting-row-company_map_fields .repeater th {
     padding-top: 0;
+}
+#gform_tab_group { display: table; width: 100%; }
+#tab_connectwise, #sidebar_section {
+	display: table-cell;
+    height: 500px;
+    margin: 0;
+    padding: 0;
+    vertical-align: top; 
+}
+#tab_connectwise { width: 100%; }
+#sidebar_section {
+	width: 15%;
+	padding: 0 0 0 20px;
 }
