@@ -5,10 +5,10 @@ GFForms::include_feed_addon_framework();
 class GFConnectWise extends GFFeedAddOn {
     protected $_title                    = "Gravity Forms ConnectWise Add-On";
     protected $_short_title              = "ConnectWise";
-    protected $_version                  = "1.1";
+    protected $_version                  = "1.0.1";
     protected $_min_gravityforms_version = "1.9.16";
     protected $_slug                     = "connectwise";
-    protected $_path                     = "gravityformsconnectwise/gravityformsconnectwise.php";
+    protected $_path                     = "connectwise-forms-integration/gravityformsconnectwise.php";
     protected $_full_path                = __FILE__;
     private static $_instance            = null;
 

@@ -1,6 +1,6 @@
 <?php
 require_once WP_PLUGIN_DIR . "/gravityforms/gravityforms.php";
-require_once WP_PLUGIN_DIR . "/gravityformsconnectwise/class-gf-connectwise.php";
+require_once WP_PLUGIN_DIR . "/connectwise-forms-integration/class-gf-connectwise.php";
 require_once 'vendor/autoload.php';
 
 class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
@@ -15,7 +15,7 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
         $this->reset_phpmailer_instance();
 
         parent::tearDown();
-    } 
+    }
 
     function tests_retrieve_phpmailer_instance() {
         $mailer = false;
@@ -29,7 +29,7 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
 
     function reset_phpmailer_instance() {
         $mailer = $this->tests_retrieve_phpmailer_instance();
-    
+
         if ( $mailer && isset( $mailer->mock_sent ) ) {
             unset( $mailer->mock_sent );
             return true;
@@ -101,7 +101,7 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
         $actual = $this->connectwise_plugin->styles();
 
         $this->assertEquals( $actual[2]["handle"], "gform_connectwise_form_settings_css" );
-        $this->assertEquals( $actual[2]["src"], "http://example.org/wp-content/plugins/gravityformsconnectwise/css/form_settings.css" );
+        $this->assertEquals( $actual[2]["src"], "http://example.org/wp-content/plugins/connectwise-forms-integration/css/form_settings.css" );
         $this->assertEquals( $actual[2]["enqueue"][0]["admin_page"][0], "form_settings" );
     }
 
@@ -3695,8 +3695,8 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
 
         $pronto_ads_js = array(
             "handle"    => "pronto_ads_js",
-            "src"       => "http://example.org/wp-content/plugins/gravityformsconnectwise/js/pronto-ads.js",
-            "version"   => "1.1",
+            "src"       => "http://example.org/wp-content/plugins/connectwise-forms-integration/js/pronto-ads.js",
+            "version"   => "1.0.1",
             "deps"      => array( "jquery" ),
             "enqueue"   =>
                 array(
