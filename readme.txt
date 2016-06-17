@@ -3,7 +3,7 @@ Contributors: prontotools, oynp
 Tags: connectwise, gravity forms, add-on, contact form, integration, psa, lead, marketing automation
 Requires at least: 4.0
 Tested up to: 4.5.1
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 Copyright: © 2016 Pronto Tools
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html 
