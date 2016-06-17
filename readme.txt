@@ -72,6 +72,10 @@ You can view a [detailed flow chart of the process here](https://pronto.bypronto
 
 == Changelog ==
 
+= 1.0.1 =
+
+* Fixed banner ads path in JS script.
+
 = 1.0.0 =
 
 * Launched!

@@ -18,6 +18,10 @@ To run, test, and develop the Multisite Login Logos plugin with Docker container
 Changelog
 ----------
 
+= 1.0.1 =
+
+* Fixed banner ads path in JS script.
+
 = 1.0 =
 
 * Launched!
