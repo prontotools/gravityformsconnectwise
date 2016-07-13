@@ -5,7 +5,7 @@ GFForms::include_feed_addon_framework();
 class GFConnectWise extends GFFeedAddOn {
     protected $_title                    = "Gravity Forms ConnectWise Add-On";
     protected $_short_title              = "ConnectWise";
-    protected $_version                  = "1.0.1";
+    protected $_version                  = "1.0.2";
     protected $_min_gravityforms_version = "1.9.16";
     protected $_slug                     = "connectwise";
     protected $_path                     = "connectwise-forms-integration/gravityformsconnectwise.php";
@@ -403,6 +403,9 @@ class GFConnectWise extends GFFeedAddOn {
                 "src"     => $this->get_base_url() . "/js/pronto-ads.js",
                 "version" => $this->_version,
                 "deps"    => array( "jquery" ),
+                "strings" => array(
+                    "path" => plugins_url( 'images/connectwise-banner.jpg', __FILE__ )
+                ),
                 "enqueue" => array(
                     array(
                         "admin_page" => array( "form_settings", "plugin_settings" )
@@ -410,6 +413,9 @@ class GFConnectWise extends GFFeedAddOn {
                 )
             ),
         );
+
+
+
 
         if (strpos($theme_name, "Phoenix") === false) {
             return array_merge( parent::scripts(), $scripts );

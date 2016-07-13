@@ -3676,9 +3676,12 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
 
         $pronto_ads_js = array(
             "handle"    => "pronto_ads_js",
-            "src"       => "http://example.org/wp-content/plugins/gravityformsconnectwise/js/pronto-ads.js",
-            "version"   => "1.1",
+            "src"       => "http://example.org/wp-content/plugins/connectwise-forms-integration/js/pronto-ads.js",
+            "version"   => "1.0.2",
             "deps"      => array( "jquery" ),
+            "strings" => array(
+                "path" => 'http://example.org/wp-content/plugins/connectwise-forms-integration/images/connectwise-banner.jpg'
+            ),
             "enqueue"   =>
                 array(
                     array(
@@ -3696,8 +3699,11 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
         $pronto_ads_js = array(
             "handle"    => "pronto_ads_js",
             "src"       => "http://example.org/wp-content/plugins/connectwise-forms-integration/js/pronto-ads.js",
-            "version"   => "1.0.1",
+            "version"   => "1.0.2",
             "deps"      => array( "jquery" ),
+            "strings" => array(
+                "path" => 'http://example.org/wp-content/plugins/connectwise-forms-integration/images/connectwise-banner.jpg'
+            ),
             "enqueue"   =>
                 array(
                     array(
