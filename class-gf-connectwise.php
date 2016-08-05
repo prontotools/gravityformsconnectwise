@@ -5,12 +5,13 @@ GFForms::include_feed_addon_framework();
 class GFConnectWise extends GFFeedAddOn {
     protected $_title                    = "Gravity Forms ConnectWise Add-On";
     protected $_short_title              = "ConnectWise";
-    protected $_version                  = "1.0.2";
+    protected $_version                  = "1.1";
     protected $_min_gravityforms_version = "1.9.16";
     protected $_slug                     = "connectwise";
-    protected $_path                     = "connectwise-forms-integration/gravityformsconnectwise.php";
+    protected $_path                     = "gravityformsconnectwise/gravityformsconnectwise.php";
     protected $_full_path                = __FILE__;
     private static $_instance            = null;
+
 
     public static function get_instance() {
         if ( self::$_instance == null ) {
@@ -20,8 +21,10 @@ class GFConnectWise extends GFFeedAddOn {
         return self::$_instance;
     }
 
-    public function init() {
-        parent::init();
+    public function setUp() {
+        parent::setUp();
+        require_once WP_PLUGIN_DIR . "/gravityformsconnectwise/class-cw-connection-version.php";
+        $this->connectwise_version = new ConnectWiseVersion();
     }
 
     public function field_map_title() {
@@ -192,21 +195,11 @@ class GFConnectWise extends GFFeedAddOn {
             $company_update_data = array(
                 array(
                     "op"    => "replace",
-                    "path"  => "defaultContact",
-                    "value" => $contact_data
+                    "path"  => "defaultContactId",
+                    "value" => $contact_id
                 )
             );
             $response     = $this->send_request( $company_url, "PATCH", $company_update_data, $error_notification = false );
-            if ( 400 == $response["response"]["code"] ) {
-                $company_update_data = array(
-                    array(
-                        "op"    => "replace",
-                        "path"  => "defaultContactId",
-                        "value" => $contact_id
-                    )
-                );
-                $response     = $this->send_request( $company_url, "PATCH", $company_update_data, $error_notification = false );
-            }
         }
 
         if ( "1" == $feed["meta"]["create_opportunity"] ) {
@@ -318,6 +311,7 @@ class GFConnectWise extends GFFeedAddOn {
             $response = $this->send_request( $url, "POST", $activity_data );
         }
 
+
         if ( "1" == $feed["meta"]["create_service_ticket"] ) {
             $url = "service/tickets";
             $ticket_data = array(
@@ -339,9 +333,26 @@ class GFConnectWise extends GFFeedAddOn {
                     "id" => $ticket_priority
                 );
             }
+            $ticket_type = $feed["meta"]["service_ticket_type"];
+            if ( "---------------" !=  $ticket_type ) {
+                $ticket_data["type"] = array(
+                    "id" => $ticket_type
+                );
+            }
+            $ticket_subtype = $feed["meta"]["service_ticket_subtype"];
+            if ( "---------------" !=  $ticket_subtype ) {
+                $ticket_data["subtype"] = array(
+                    "id" => $ticket_subtype
+                );
+            }
+            $ticket_item = $feed["meta"]["service_ticket_item"];
+            if ( "---------------" !=  $ticket_item ) {
+                $ticket_data["item"] = array(
+                    "id" => $ticket_item
+                );
+            }
             $response = $this->send_request( $url, "POST", $ticket_data);
         }
-
         $this->log_debug( "# " . __METHOD__ . "(): finish sending data to ConnectWise #" );
 
         return $lead;
@@ -557,7 +568,7 @@ class GFConnectWise extends GFFeedAddOn {
                     "label" => esc_html__( "Notes", "gravityformsconnectwise" ),
                     "type"  => "textarea",
                     "class" => "medium merge-tag-support"
-                )
+                ),
             )
         );
 
@@ -693,6 +704,27 @@ class GFConnectWise extends GFFeedAddOn {
                     "choices"  => $this->get_service_priority(),
                 ),
                 array(
+                    "name"     => "service_ticket_type",
+                    "required" => false,
+                    "label"    => esc_html__( "Type", "gravityformsconnectwise" ),
+                    "type"     => "select",
+                    "choices"  => $this->get_service_types(),
+               ),
+                array(
+                   "name"     => "service_ticket_subtype",
+                   "required" => false,
+                   "label"    => esc_html__( "Subtype", "gravityformsconnectwise" ),
+                   "type"     => "select",
+                   "choices"  => $this->get_service_subtypes(),
+               ),
+                array(
+                   "name"     => "service_ticket_item",
+                   "required" => false,
+                   "label"    => esc_html__( "Item", "gravityformsconnectwise" ),
+                   "type"     => "select",
+                   "choices"  => $this->get_service_item(),
+               ),
+                array(
                     "name"     => "service_ticket_initial_description",
                     "required" => true,
                     "label"    => esc_html__( "Initial Description", "gravityformsconnectwise" ),
@@ -821,7 +853,7 @@ class GFConnectWise extends GFFeedAddOn {
     public function get_company_types() {
         $company_type_list = array();
 
-        $get_company_type_url = "company/companies/types";
+        $get_company_type_url = "company/companies/types?pageSize=200";
         $cw_company_type = $this->send_request( $get_company_type_url, "GET", NULL );
         $cw_company_type = json_decode( $cw_company_type["body"] );
 
@@ -930,6 +962,105 @@ class GFConnectWise extends GFFeedAddOn {
         return $activity_type_list;
     }
 
+    public function get_service_types() {
+        $this->log_debug( __METHOD__ . "(): start getting service type from ConnectWise" );
+        $type_list = array();
+        $get_boards_url = "service/boards";
+        $cw_board = $this->send_request( $get_boards_url, "GET", NULL );
+        $cw_board = json_decode( $cw_board["body"] );
+        $default_board      = array(
+            "label" => esc_html__( "---------------", "gravityformsconnectwise" ),
+            "value" => NULL
+        );
+        array_push( $type_list, $default_board );
+        foreach ( $cw_board as $each_board ) {
+            $get_type_url = "service/boards/" . $each_board->id . "/types";
+            $cw_service_type = $this->send_request( $get_type_url, "GET", NULL );
+            $cw_service_type = json_decode( $cw_service_type["body"] );
+            $choices = array();
+            foreach ( $cw_service_type as $each_type ) {
+                $type = array(
+                    "label" => esc_html__( $each_type->name, "gravityformsconnectwise" ),
+                    "value" => $each_type->id
+                );
+                array_push( $choices, $type );
+            }
+            $board = array(
+                "label" => esc_html__( $each_board->name, "gravityformsconnectwise" ),
+                "choices" => $choices
+            );
+            array_push( $type_list, $board );
+        }
+        $this->log_debug( __METHOD__ . "(): finish getting service type from ConnectWise" );
+        return $type_list;
+    }
+
+    public function get_service_subtypes() {
+        $this->log_debug( __METHOD__ . "(): start getting service subtype from ConnectWise" );
+        $subtype_list = array();
+        $get_boards_url = "service/boards";
+        $cw_board = $this->send_request( $get_boards_url, "GET", NULL );
+        $cw_board = json_decode( $cw_board["body"] );
+        $default_board      = array(
+            "label" => esc_html__( "---------------", "gravityformsconnectwise" ),
+            "value" => NULL
+        );
+        array_push( $subtype_list, $default_board );
+        foreach ( $cw_board as $each_board ) {
+            $get_subtype_url = "service/boards/" . $each_board->id . "/subtypes";
+            $cw_service_subtype = $this->send_request( $get_subtype_url, "GET", NULL );
+            $cw_service_subtype = json_decode( $cw_service_subtype["body"] );
+            $choices = array();
+            foreach ( $cw_service_subtype as $each_subtype ) {
+                $subtype = array(
+                    "label" => esc_html__( $each_subtype->name, "gravityformsconnectwise" ),
+                    "value" => $each_subtype->id
+                );
+                array_push( $choices, $subtype );
+            }
+            $board = array(
+                "label" => esc_html__( $each_board->name, "gravityformsconnectwise" ),
+                "choices" => $choices
+            );
+            array_push( $subtype_list, $board );
+        }
+        $this->log_debug( __METHOD__ . "(): finish getting service subtype from ConnectWise" );
+        return $subtype_list;
+   }
+
+    public function get_service_item() {
+        $this->log_debug( __METHOD__ . "(): start getting service item from ConnectWise" );
+        $item_list = array();
+        $get_boards_url = "service/boards";
+        $cw_board = $this->send_request( $get_boards_url, "GET", NULL );
+        $cw_board = json_decode( $cw_board["body"] );
+        $default_board      = array(
+            "label" => esc_html__( "---------------", "gravityformsconnectwise" ),
+            "value" => NULL
+        );
+        array_push( $item_list, $default_board );
+        foreach ( $cw_board as $each_board ) {
+            $get_item_url = "service/boards/" . $each_board->id . "/items";
+            $cw_service_item = $this->send_request( $get_item_url, "GET", NULL );
+            $cw_service_item = json_decode( $cw_service_item["body"] );
+            $choices = array();
+            foreach ( $cw_service_item as $each_item ) {
+                $item = array(
+                    "label" => esc_html__( $each_item->name, "gravityformsconnectwise" ),
+                    "value" => $each_item->id
+                );
+                array_push( $choices, $item );
+            }
+            $board = array(
+                "label" => esc_html__( $each_board->name, "gravityformsconnectwise" ),
+                "choices" => $choices
+            );
+            array_push( $item_list, $board );
+        }
+        $this->log_debug( __METHOD__ . "(): finish getting service item from ConnectWise" );
+        return $item_list;
+    }
+
     public function standard_fields_mapping() {
         return array(
             array(
@@ -1006,8 +1137,8 @@ class GFConnectWise extends GFFeedAddOn {
                         "label" => esc_html__( "Web site", "gravityformsconnectwise" ),
                         "value" => "web_site"
                     ),
-                )
-            ),
+                ),
+              ),
         );
     }
 
@@ -1121,21 +1252,6 @@ class GFConnectWise extends GFFeedAddOn {
         }
     }
 
-    public function transform_url( $url ) {
-        $wp_connectwise_url = $this->get_plugin_setting( "connectwise_url" );
-
-        $prefix = array( "na.", "eu.", "aus." );
-        $first_dot_pos = strpos( $wp_connectwise_url, "." );
-
-        if ( true == in_array( substr( $wp_connectwise_url, 0, $first_dot_pos + 1 ), $prefix ) ) {
-            $url = "https://api-" . $wp_connectwise_url . "/v4_6_release/apis/3.0/" . $url;
-        } else {
-            $url = "https://" . $wp_connectwise_url . "/v4_6_release/apis/3.0/" . $url;
-        }
-
-        return $url;
-    }
-
     public function send_error_notification( $response_body, $response_code, $url, $body ) {
         $to = $this->get_plugin_setting( "error_notification_emails_to" );
 
@@ -1167,7 +1283,7 @@ class GFConnectWise extends GFFeedAddOn {
             $this->log_debug( "## " . __METHOD__ . "(): start sending request ##" );
         }
 
-        $url =  $this->transform_url( $url );
+        $url =  $this->connectwise_version->transform_url( $url );
 
         if ( false == strpos( $url, "system/info" ) ) {
             $this->log_debug( __METHOD__ . "(): url => " . print_r( $url, true ) );

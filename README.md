@@ -18,6 +18,11 @@ To run, test, and develop the Multisite Login Logos plugin with Docker container
 Changelog
 ----------
 
+= 1.1.0 =
+
+* Service ticket type, Service ticket subtype, Service ticket item
+* Have better API version control
+
 = 1.0.2 =
 
 * Improved banner ads path in JS script (no hardcode).

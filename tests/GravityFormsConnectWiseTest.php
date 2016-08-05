@@ -1,6 +1,7 @@
 <?php
 require_once WP_PLUGIN_DIR . "/gravityforms/gravityforms.php";
-require_once WP_PLUGIN_DIR . "/connectwise-forms-integration/class-gf-connectwise.php";
+require_once WP_PLUGIN_DIR . "/gravityformsconnectwise/class-gf-connectwise.php";
+require_once WP_PLUGIN_DIR . "/gravityformsconnectwise/class-cw-connection-version.php";
 require_once 'vendor/autoload.php';
 
 class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
@@ -8,6 +9,7 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
         parent::setUp();
 
         $this->connectwise_plugin = new GFConnectWise();
+        $this->connectwise_api = new ConnectWiseVersion();
         $this->slug = "gravityformsaddon_connectwise_settings";
     }
 
@@ -101,7 +103,7 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
         $actual = $this->connectwise_plugin->styles();
 
         $this->assertEquals( $actual[2]["handle"], "gform_connectwise_form_settings_css" );
-        $this->assertEquals( $actual[2]["src"], "http://example.org/wp-content/plugins/connectwise-forms-integration/css/form_settings.css" );
+        $this->assertEquals( $actual[2]["src"], "http://example.org/wp-content/plugins/gravityformsconnectwise/css/form_settings.css" );
         $this->assertEquals( $actual[2]["enqueue"][0]["admin_page"][0], "form_settings" );
     }
 
@@ -114,89 +116,92 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
     }
 
     function test_transform_url_should_add_api_path_to_url() {
-        $GF_ConnectWise = $this->getMockBuilder( "GFConnectWise" )
+        $ConnectWiseVersion = $this->getMockBuilder( "ConnectWiseVersion" )
                                ->setMethods( array( "get_plugin_setting" ) )
                                ->getMock();
 
-        $GF_ConnectWise->method( "get_plugin_setting" )
+        $ConnectWiseVersion->method( "get_plugin_setting" )
                        ->willReturn( "staging.connectwisetest.com" );
 
-        $GF_ConnectWise->expects( $this->once() )
+        $ConnectWiseVersion->expects( $this->once() )
                        ->method( "get_plugin_setting" )
                        ->with( "connectwise_url" );
 
         $input_url    = "system/members";
         $expected_url = "https://staging.connectwisetest.com/v4_6_release/apis/3.0/system/members";
-        $actual_url   = $GF_ConnectWise->transform_url( $input_url );
+        $actual_url   = $ConnectWiseVersion->transform_url( $input_url );
 
         $this->assertEquals( $actual_url, $expected_url );
     }
 
     function test_transform_url_should_add_api_infront_of_na_connectwise_url() {
-        $GF_ConnectWise = $this->getMockBuilder( "GFConnectWise" )
+        $ConnectWiseVersion = $this->getMockBuilder( "ConnectWiseVersion" )
             ->setMethods( array( "get_plugin_setting" ) )
             ->getMock();
 
-        $GF_ConnectWise->method( "get_plugin_setting" )
+        $ConnectWiseVersion->method( "get_plugin_setting" )
             ->willReturn( "na.connectwisetest.com" );
 
-        $GF_ConnectWise->expects( $this->once() )
+        $ConnectWiseVersion->expects( $this->once() )
             ->method( "get_plugin_setting" )
             ->with( "connectwise_url" );
 
         $input_url    = "system/members";
         $expected_url = "https://api-na.connectwisetest.com/v4_6_release/apis/3.0/system/members";
-        $actual_url   = $GF_ConnectWise->transform_url( $input_url );
+        $actual_url   = $ConnectWiseVersion->transform_url( $input_url );
 
         $this->assertEquals( $expected_url, $actual_url );
     }
 
     function test_transform_url_should_add_api_infront_of_eu_connectwise_url() {
-        $GF_ConnectWise = $this->getMockBuilder( "GFConnectWise" )
+        $ConnectWiseVersion = $this->getMockBuilder( "ConnectWiseVersion" )
             ->setMethods( array( "get_plugin_setting" ) )
             ->getMock();
 
-        $GF_ConnectWise->method( "get_plugin_setting" )
+        $ConnectWiseVersion->method( "get_plugin_setting" )
             ->willReturn( "eu.connectwisetest.com" );
 
-        $GF_ConnectWise->expects( $this->once() )
+        $ConnectWiseVersion->expects( $this->once() )
             ->method( "get_plugin_setting" )
             ->with( "connectwise_url" );
 
         $input_url    = "system/members";
         $expected_url = "https://api-eu.connectwisetest.com/v4_6_release/apis/3.0/system/members";
-        $actual_url   = $GF_ConnectWise->transform_url( $input_url );
+        $actual_url   = $ConnectWiseVersion->transform_url( $input_url );
 
         $this->assertEquals( $expected_url, $actual_url );
     }
 
     function test_transform_url_should_add_api_infront_of_aus_connectwise_url() {
-        $GF_ConnectWise = $this->getMockBuilder( "GFConnectWise" )
+        $ConnectWiseVersion = $this->getMockBuilder( "ConnectWiseVersion" )
             ->setMethods( array( "get_plugin_setting" ) )
             ->getMock();
 
-        $GF_ConnectWise->method( "get_plugin_setting" )
+        $ConnectWiseVersion->method( "get_plugin_setting" )
             ->willReturn( "aus.connectwisetest.com" );
 
-        $GF_ConnectWise->expects( $this->once() )
+        $ConnectWiseVersion->expects( $this->once() )
             ->method( "get_plugin_setting" )
             ->with( "connectwise_url" );
 
         $input_url    = "system/members";
         $expected_url = "https://api-aus.connectwisetest.com/v4_6_release/apis/3.0/system/members";
-        $actual_url   = $GF_ConnectWise->transform_url( $input_url );
+        $actual_url   = $ConnectWiseVersion->transform_url( $input_url );
 
         $this->assertEquals( $expected_url, $actual_url );
     }
 
     function test_send_request_should_call_transform_url() {
-        $GF_ConnectWise = $this->getMockBuilder( "GFConnectWise" )
+        $ConnectWiseVersion = $this->getMockBuilder( "ConnectWiseVersion" )
             ->setMethods( array( "transform_url" ) )
             ->getMock();
 
-        $GF_ConnectWise->expects( $this->once() )
+        $ConnectWiseVersion->expects( $this->once() )
             ->method( "transform_url" )
             ->with( "system/info" );
+
+        $GF_ConnectWise = new GFConnectWise();
+        $GF_ConnectWise->connectwise_version = $ConnectWiseVersion;
 
         $GF_ConnectWise->send_request(
             "system/info",
@@ -339,12 +344,15 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
                 "get_departments",
                 "get_service_board",
                 "get_service_priority",
+                "get_service_types",
+                "get_service_subtypes",
+                "get_service_item",
                 "get_contact_types",
                 "get_company_types",
                 "get_company_statuses",
                 "get_activity_types",
                 "get_opportunity_types",
-                "get_marketing_campaign"
+                "get_marketing_campaign",
             ) )
             ->getMock();
 
@@ -382,6 +390,39 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
             array(
                 "value" => "2",
                 "label" => "Special",
+            )
+        );
+
+        $mock_service_types_response = array(
+            array(
+                "value" => "1",
+                "label" => "Break-fix",
+            ),
+            array(
+                "value" => "2",
+                "label" => "Proactive",
+            )
+        );
+
+        $mock_service_subtypes_response = array(
+            array(
+                "value" => "1",
+                "label" => "CRM",
+            ),
+            array(
+                "value" => "2",
+                "label" => "RMM",
+            )
+        );
+
+        $mock_service_item_response = array(
+            array(
+                "value" => "1",
+                "label" => "Service Board",
+            ),
+            array(
+                "value" => "2",
+                "label" => "Workflow Rules",
             )
         );
 
@@ -487,6 +528,21 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
             ->will( $this->returnValue( $mock_priorities_response ) );
 
         $GF_ConnectWise->expects( $this->exactly(1) )
+            ->method( "get_service_types" )
+            ->with()
+            ->will($this->returnValue( $mock_service_types_response ));
+
+        $GF_ConnectWise->expects( $this->exactly(1) )
+            ->method( "get_service_subtypes" )
+            ->with()
+            ->will($this->returnValue( $mock_service_subtypes_response ));
+
+        $GF_ConnectWise->expects( $this->exactly(1) )
+            ->method( "get_service_item" )
+            ->with()
+            ->will($this->returnValue( $mock_service_item_response ));
+
+        $GF_ConnectWise->expects( $this->exactly(1) )
             ->method( "get_company_types" )
             ->with()
             ->will($this->returnValue( $mock_company_types_response ));
@@ -538,6 +594,11 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
         $contact_department_choices    = $contact_fields["fields"][2]["choices"];
         $service_board_choices         = $service_ticket_fields["fields"][1]["choices"];
         $service_priority_choices      = $service_ticket_fields["fields"][2]["choices"];
+
+        $service_type_choices          = $service_ticket_fields["fields"][3]["choices"];
+        $service_subtype_choices       = $service_ticket_fields["fields"][4]["choices"];
+        $service_item_choices          = $service_ticket_fields["fields"][5]["choices"];
+
         $company_type_choices          = $company_fields["fields"][1]["choices"];
         $company_statuses_choices      = $company_fields["fields"][2]["choices"];
         $activity_type_choices         = $activity_fields["fields"][3]["choices"];
@@ -626,30 +687,50 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
         $this->assertEquals( $company_statuses_choices[1]["value"], "2" );
         $this->assertEquals( $company_statuses_choices[1]["label"], "Imported" );
 
+
         $expected  = "&lt;h6&gt;Company Map Fields&lt;/h6&gt;Select which Gravity Form fields pair with their respective ConnectWise fields.";
         $this->assertEquals( $company_fields["fields"][0]["tooltip"], $expected );
 
         $this->assertEquals( $service_ticket_fields["title"], "Service Ticket Details" );
         $this->assertEquals( $service_ticket_fields["dependency"]["field"], "create_service_ticket" );
         $this->assertEquals( $service_ticket_fields["dependency"]["values"], "1" );
+
         $this->assertEquals( $service_ticket_fields["fields"][0]["name"], "service_ticket_summary" );
         $this->assertEquals( $service_ticket_fields["fields"][0]["required"], true );
         $this->assertEquals( $service_ticket_fields["fields"][0]["label"], "Summary" );
         $this->assertEquals( $service_ticket_fields["fields"][0]["type"], "text" );
         $this->assertEquals( $service_ticket_fields["fields"][0]["class"], "medium merge-tag-support" );
+
         $this->assertEquals( $service_ticket_fields["fields"][1]["name"], "service_ticket_board" );
         $this->assertEquals( $service_ticket_fields["fields"][1]["required"], false );
         $this->assertEquals( $service_ticket_fields["fields"][1]["label"], "Board" );
         $this->assertEquals( $service_ticket_fields["fields"][1]["type"], "select" );
+
         $this->assertEquals( $service_ticket_fields["fields"][2]["name"], "service_ticket_priority" );
         $this->assertEquals( $service_ticket_fields["fields"][2]["required"], false );
         $this->assertEquals( $service_ticket_fields["fields"][2]["label"], "Priority" );
         $this->assertEquals( $service_ticket_fields["fields"][2]["type"], "select" );
-        $this->assertEquals( $service_ticket_fields["fields"][3]["name"], "service_ticket_initial_description" );
-        $this->assertEquals( $service_ticket_fields["fields"][3]["required"], true );
-        $this->assertEquals( $service_ticket_fields["fields"][3]["label"], "Initial Description" );
-        $this->assertEquals( $service_ticket_fields["fields"][3]["type"], "textarea" );
-        $this->assertEquals( $service_ticket_fields["fields"][3]["class"], "medium merge-tag-support" );
+
+        $this->assertEquals( $service_ticket_fields["fields"][3]["name"], "service_ticket_type" );
+        $this->assertEquals( $service_ticket_fields["fields"][3]["required"], false );
+        $this->assertEquals( $service_ticket_fields["fields"][3]["label"], "Type" );
+        $this->assertEquals( $service_ticket_fields["fields"][3]["type"], "select" );
+
+        $this->assertEquals( $service_ticket_fields["fields"][4]["name"], "service_ticket_subtype" );
+        $this->assertEquals( $service_ticket_fields["fields"][4]["required"], false );
+        $this->assertEquals( $service_ticket_fields["fields"][4]["label"], "Subtype" );
+        $this->assertEquals( $service_ticket_fields["fields"][4]["type"], "select" );
+
+        $this->assertEquals( $service_ticket_fields["fields"][5]["name"], "service_ticket_item" );
+        $this->assertEquals( $service_ticket_fields["fields"][5]["required"], false );
+        $this->assertEquals( $service_ticket_fields["fields"][5]["label"], "Item" );
+        $this->assertEquals( $service_ticket_fields["fields"][5]["type"], "select" );
+
+        $this->assertEquals( $service_ticket_fields["fields"][6]["name"], "service_ticket_initial_description" );
+        $this->assertEquals( $service_ticket_fields["fields"][6]["required"], true );
+        $this->assertEquals( $service_ticket_fields["fields"][6]["label"], "Initial Description" );
+        $this->assertEquals( $service_ticket_fields["fields"][6]["type"], "textarea" );
+        $this->assertEquals( $service_ticket_fields["fields"][6]["class"], "medium merge-tag-support" );
 
         $this->assertEquals( count( $service_board_choices ), 2 );
         $this->assertEquals( $service_board_choices[0]["value"], "1" );
@@ -661,6 +742,24 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
         $this->assertEquals( $service_priority_choices[0]["label"], "Urgent" );
         $this->assertEquals( $service_priority_choices[1]["value"], "2" );
         $this->assertEquals( $service_priority_choices[1]["label"], "High" );
+
+        $this->assertEquals( count( $service_type_choices ), 2 );
+        $this->assertEquals( $service_type_choices[0]["value"], "1" );
+        $this->assertEquals( $service_type_choices[0]["label"], "Break-fix" );
+        $this->assertEquals( $service_type_choices[1]["value"], "2" );
+        $this->assertEquals( $service_type_choices[1]["label"], "Proactive" );
+
+        $this->assertEquals( count( $service_subtype_choices ), 2 );
+        $this->assertEquals( $service_subtype_choices[0]["value"], "1" );
+        $this->assertEquals( $service_subtype_choices[0]["label"], "CRM" );
+        $this->assertEquals( $service_subtype_choices[1]["value"], "2" );
+        $this->assertEquals( $service_subtype_choices[1]["label"], "RMM" );
+
+        $this->assertEquals( count( $service_item_choices ), 2 );
+        $this->assertEquals( $service_item_choices[0]["value"], "1" );
+        $this->assertEquals( $service_item_choices[0]["label"], "Service Board" );
+        $this->assertEquals( $service_item_choices[1]["value"], "2" );
+        $this->assertEquals( $service_item_choices[1]["label"], "Workflow Rules" );
 
         $this->assertEquals( $opportunity_fields["title"], "Opportunity Details" );
         $this->assertEquals( $opportunity_fields["dependency"]["field"], "create_opportunity" );
@@ -1343,6 +1442,27 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
             );
 
         $GF_ConnectWise->process_feed( $feed, $lead, array() );
+    }
+
+    function get_cw_system_info() {
+        $mock_connectwise_version_response = array(
+            "response" => array(
+                "code" => 200
+            ),
+            "body"     => '{"version": "v2016.5.41842" }'
+        );
+
+        return $mock_connectwise_version_response;
+    }
+
+    function test_get_connectwise_version_should_return_version() {
+        add_filter( "pre_http_request", array( $this, "get_cw_system_info" ), 10, 3 );
+
+        $ConnectWiseVersion = new ConnectWiseVersion();
+        $existing_version = $ConnectWiseVersion->get();
+
+        $expect_version = "2016.5.41842";
+        $this->assertEquals( $existing_version, $expect_version);
     }
 
     function test_get_existing_contact_should_return_contact_if_email_is_exsiting() {
@@ -2098,8 +2218,8 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
         $company_update_data   = array(
             array(
                 "op"    => "replace",
-                "path"  => "defaultContact",
-                "value" => json_decode( $mock_contact_response["body"] )
+                "path"  => "defaultContactId",
+                "value" => 20
             )
         );
 
@@ -2143,7 +2263,8 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
 
         $GF_ConnectWise->process_feed( $feed, $lead, array() );
     }
-    function test_primary_default_contact_data_not_work_should_use_contact_id() {
+
+    function test_primary_default_contact_data_should_use_contact_id() {
         $feed = array(
             "id" => "1",
             "form_id" => "1",
@@ -2243,14 +2364,6 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
             "body" => $mock_contact_data
         );
 
-        $company_update_data   = array(
-            array(
-                "op"    => "replace",
-                "path"  => "defaultContact",
-                "value" => json_decode( $mock_contact_response["body"] )
-            )
-        );
-
         $company_update_data_with_id  = array(
             array(
                 "op"    => "replace",
@@ -2280,12 +2393,6 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
             "body" => '[{"id": 1}]'
         );
 
-        $mock_update_company_response = array(
-            "response" => array(
-                "code" => 400
-            )
-        );
-
         $GF_ConnectWise->expects( $this->at( 4 ) )
                        ->method( "send_request" )
                        ->with(
@@ -2296,15 +2403,6 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
                        ->will($this->returnValue( $mock_company_response ));
 
         $GF_ConnectWise->expects( $this->at(5) )
-                       ->method( "send_request" )
-                       ->with(
-                            "company/companies/1",
-                            "PATCH",
-                            $company_update_data
-                       )
-                       ->will($this->returnValue( $mock_update_company_response ));
-
-        $GF_ConnectWise->expects( $this->at(6) )
                        ->method( "send_request" )
                        ->with(
                             "company/companies/1",
@@ -2408,7 +2506,10 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
                 "create_service_ticket"              => "1",
                 "service_ticket_summary"             => "Test Ticket Name",
                 "service_ticket_initial_description" => "Test Ticket Description",
-                "company_map_fields"                 => array()
+                "company_map_fields"                 => array(),
+                "service_ticket_type"                => "---------------",
+                "service_ticket_subtype"             => "---------------",
+                "service_ticket_item"                => "---------------"
             )
         );
 
@@ -2449,10 +2550,12 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
                 "service_ticket_summary"             => "Test Ticket Name",
                 "service_ticket_initial_description" => "Test Ticket Description",
                 "service_ticket_board"               => "1",
-                "company_map_fields"                 => array()
+                "company_map_fields"                 => array(),
+                "service_ticket_type"                => "---------------",
+                "service_ticket_subtype"             => "---------------",
+                "service_ticket_item"                => "---------------"
             )
         );
-
         $ticket_data = array(
             "summary"            => "Test Ticket Name",
             "initialDescription" => "Test Ticket Description",
@@ -2493,7 +2596,10 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
                 "service_ticket_summary"             => "Test Ticket Name",
                 "service_ticket_initial_description" => "Test Ticket Description",
                 "service_ticket_priority"            => "1",
-                "company_map_fields"                 => array()
+                "company_map_fields"                 => array(),
+                "service_ticket_type"                => "---------------",
+                "service_ticket_subtype"             => "---------------",
+                "service_ticket_item"                => "---------------"
             )
         );
 
@@ -2543,6 +2649,9 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
                 "create_service_ticket"              => "1",
                 "service_ticket_summary"             => "Test Ticket Name",
                 "service_ticket_initial_description" => "Test Ticket Description",
+                "service_ticket_type"                => "---------------",
+                "service_ticket_subtype"             => "---------------",
+                "service_ticket_item"                => "---------------",
                 "company_map_fields"                 => array(
                     array(
                         "key"        => "company",
@@ -3647,6 +3756,178 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
         $this->assertEquals( $actual_campaign_list, $expected_campaign_list);
     }
 
+
+    function test_service_type_api_should_return_correct_type_list() {
+        $GF_ConnectWise = $this->getMockBuilder( "GFConnectWise" )
+            ->setMethods( array( "send_request" ) )
+            ->getMock();
+
+        $mock_board_data = '[{"name":"Administration", "id":1}]';
+        $mock_board_response = array(
+            "body" => $mock_board_data
+        );
+
+        $GF_ConnectWise->expects( $this->at( 0 ) )
+            ->method( "send_request" )
+            ->with(
+                "service/boards",
+                "GET",
+                NULL
+            )
+            ->will( $this->returnValue( $mock_board_response ) );
+
+        $board_url = "service/boards/1/types";
+
+        $mock_service_types_response = array(
+            "body" => '[{"id": "1", "name": "Break-fix"},{"id": "2", "name": "Proactive"}]'
+        );
+
+        $GF_ConnectWise->expects( $this->at( 1 ) )
+            ->method( "send_request" )
+            ->with(
+                $board_url,
+                "GET",
+                NULL
+            )
+            ->will( $this->returnValue( $mock_service_types_response ) );
+
+        $actual_type_list = $GF_ConnectWise->get_service_types();
+        $expected_type_list = array(
+            array(
+                "label" => "---------------",
+                "value" => NULL
+            ),
+            array(
+                "label" => "Administration",
+                "choices" => array(
+                        array(
+                            "value" => "1",
+                            "label" => "Break-fix",
+                        ),
+                        array(
+                            "value" => "2",
+                            "label" => "Proactive",
+                        )
+                 )
+          )
+        );
+        $this->assertEquals( $actual_type_list, $expected_type_list);
+    }
+
+    function test_service_subtype_api_should_return_correct_subtype_list() {
+        $GF_ConnectWise = $this->getMockBuilder( "GFConnectWise" )
+            ->setMethods( array( "send_request" ) )
+            ->getMock();
+
+        $mock_board_data = '[{"name":"Administration", "id":1}]';
+        $mock_board_response = array(
+            "body" => $mock_board_data
+        );
+
+        $GF_ConnectWise->expects( $this->at( 0 ) )
+            ->method( "send_request" )
+            ->with(
+                "service/boards",
+                "GET",
+                NULL
+            )
+            ->will( $this->returnValue( $mock_board_response ) );
+
+        $board_url = "service/boards/1/subtypes";
+
+        $mock_service_subtypes_response = array(
+            "body" => '[{"id": "1", "name": "CRM"},{"id": "2", "name": "RMM"}]'
+        );
+
+        $GF_ConnectWise->expects( $this->at( 1 ) )
+            ->method( "send_request" )
+            ->with(
+                $board_url,
+                "GET",
+                NULL
+            )
+            ->will( $this->returnValue( $mock_service_subtypes_response ) );
+
+        $actual_subtype_list = $GF_ConnectWise->get_service_subtypes();
+        $expected_subtype_list = array(
+            array(
+                "label" => "---------------",
+                "value" => NULL
+            ),
+            array(
+                "label" => "Administration",
+                "choices" => array(
+                        array(
+                            "value" => "1",
+                            "label" => "CRM",
+                        ),
+                        array(
+                            "value" => "2",
+                            "label" => "RMM",
+                        )
+                )
+            )
+        );
+        $this->assertEquals( $actual_subtype_list, $expected_subtype_list);
+    }
+
+    function test_service_item_api_should_return_correct_item_list() {
+        $GF_ConnectWise = $this->getMockBuilder( "GFConnectWise" )
+            ->setMethods( array( "send_request" ) )
+            ->getMock();
+
+        $mock_board_data = '[{"name":"Administration", "id":1}]';
+        $mock_board_response = array(
+            "body" => $mock_board_data
+        );
+
+        $GF_ConnectWise->expects( $this->at( 0 ) )
+            ->method( "send_request" )
+            ->with(
+                "service/boards",
+                "GET",
+                NULL
+            )
+            ->will( $this->returnValue( $mock_board_response ) );
+
+        $board_url = "service/boards/1/items";
+
+        $mock_service_item_response = array(
+            "body" => '[{"id": "1", "name": "Service Board"},{"id": "2", "name": "Workflow Rules"}]'
+        );
+
+        $GF_ConnectWise->expects( $this->at( 1 ) )
+            ->method( "send_request" )
+            ->with(
+                $board_url,
+                "GET",
+                NULL
+            )
+            ->will( $this->returnValue( $mock_service_item_response ) );
+
+        $actual_item_list = $GF_ConnectWise->get_service_item();
+        $expected_item_list = array(
+            array(
+                "label" => "---------------",
+                "value" => NULL
+            ),
+            array(
+                "label" => "Administration",
+                "choices" => array(
+                        array(
+                            "value" => "1",
+                            "label" => "Service Board",
+                        ),
+                        array(
+                            "value" => "2",
+                            "label" => "Workflow Rules",
+                        )
+               )
+            )
+        );
+        $this->assertEquals( $actual_item_list, $expected_item_list);
+    }
+
     function test_feed_list_column_should_return_correct_column() {
         $actual = $this->connectwise_plugin->feed_list_columns();
         $expected = array(
@@ -3676,12 +3957,9 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
 
         $pronto_ads_js = array(
             "handle"    => "pronto_ads_js",
-            "src"       => "http://example.org/wp-content/plugins/connectwise-forms-integration/js/pronto-ads.js",
-            "version"   => "1.0.2",
+            "src"       => "http://example.org/wp-content/plugins/gravityformsconnectwise/js/pronto-ads.js",
+            "version"   => "1.1",
             "deps"      => array( "jquery" ),
-            "strings" => array(
-                "path" => 'http://example.org/wp-content/plugins/connectwise-forms-integration/images/connectwise-banner.jpg'
-            ),
             "enqueue"   =>
                 array(
                     array(
@@ -3698,11 +3976,11 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
 
         $pronto_ads_js = array(
             "handle"    => "pronto_ads_js",
-            "src"       => "http://example.org/wp-content/plugins/connectwise-forms-integration/js/pronto-ads.js",
-            "version"   => "1.0.2",
+            "src"       => "http://example.org/wp-content/plugins/gravityformsconnectwise/js/pronto-ads.js",
+            "version"   => "1.1",
             "deps"      => array( "jquery" ),
             "strings" => array(
-                "path" => 'http://example.org/wp-content/plugins/connectwise-forms-integration/images/connectwise-banner.jpg'
+                "path" => 'http://example.org/wp-content/plugins/gravityformsconnectwise/images/connectwise-banner.jpg'
             ),
             "enqueue"   =>
                 array(
