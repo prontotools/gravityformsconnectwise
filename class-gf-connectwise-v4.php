@@ -1,9 +1,9 @@
 <?php
 
-require_once WP_PLUGIN_DIR . "/connectwise-forms-integration/class-gf-connectwise-v3.php";
+require_once WP_PLUGIN_DIR . "/connectwise-forms-integration/class-gf-connectwise.php";
 GFForms::include_feed_addon_framework();
 
-class GFConnectWiseV4 extends GFConnectWiseV3 {
+class GFConnectWiseV4 extends GFConnectWise {
     private static $_instance = null;
 
     public static function get_instance() {
@@ -35,5 +35,8 @@ class GFConnectWiseV4 extends GFConnectWiseV3 {
 
         return $team_members_list;
     }
+
+}
+}
 
 }
