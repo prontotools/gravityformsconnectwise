@@ -8,7 +8,7 @@ class GFConnectWise extends GFFeedAddOn {
     protected $_version                  = "1.1";
     protected $_min_gravityforms_version = "1.9.16";
     protected $_slug                     = "connectwise";
-    protected $_path                     = "gravityformsconnectwise/gravityformsconnectwise.php";
+    protected $_path                     = "connectwise-forms-integration/gravityformsconnectwise.php";
     protected $_full_path                = __FILE__;
     private static $_instance            = null;
 
@@ -23,7 +23,7 @@ class GFConnectWise extends GFFeedAddOn {
 
     public function setUp() {
         parent::setUp();
-        require_once WP_PLUGIN_DIR . "/gravityformsconnectwise/class-cw-connection-version.php";
+        require_once WP_PLUGIN_DIR . "/connectwise-forms-integration/class-cw-connection-version.php";
         $this->connectwise_version = new ConnectWiseVersion();
     }
 

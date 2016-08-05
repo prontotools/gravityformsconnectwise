@@ -1,6 +1,6 @@
 <?php
 require_once WP_PLUGIN_DIR . "/gravityforms/gravityforms.php";
-require_once WP_PLUGIN_DIR . "/gravityformsconnectwise/class-gf-connectwise-v4.php";
+require_once WP_PLUGIN_DIR . "/connectwise-forms-integration/class-gf-connectwise-v4.php";
 require_once 'vendor/autoload.php';
 
 class GravityFormsConnectWiseAddOnTestV4 extends WP_UnitTestCase {

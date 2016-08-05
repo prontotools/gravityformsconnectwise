@@ -11,7 +11,7 @@
  */
 
 add_action( "gform_loaded", array( "GFConnectWiseBootstrap", "load" ), 5 );
-require_once WP_PLUGIN_DIR . "/gravityformsconnectwise/class-cw-connection-version.php";
+require_once WP_PLUGIN_DIR . "/connectwise-forms-integration/class-cw-connection-version.php";
 
 class GFConnectWiseBootstrap {
 

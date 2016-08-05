@@ -1,7 +1,7 @@
 <?php
 require_once WP_PLUGIN_DIR . "/gravityforms/gravityforms.php";
-require_once WP_PLUGIN_DIR . "/gravityformsconnectwise/class-gf-connectwise.php";
-require_once WP_PLUGIN_DIR . "/gravityformsconnectwise/class-cw-connection-version.php";
+require_once WP_PLUGIN_DIR . "/connectwise-forms-integration/class-gf-connectwise.php";
+require_once WP_PLUGIN_DIR . "/connectwise-forms-integration/class-cw-connection-version.php";
 require_once 'vendor/autoload.php';
 
 class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
@@ -103,7 +103,7 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
         $actual = $this->connectwise_plugin->styles();
 
         $this->assertEquals( $actual[2]["handle"], "gform_connectwise_form_settings_css" );
-        $this->assertEquals( $actual[2]["src"], "http://example.org/wp-content/plugins/gravityformsconnectwise/css/form_settings.css" );
+        $this->assertEquals( $actual[2]["src"], "http://example.org/wp-content/plugins/connectwise-forms-integration/css/form_settings.css" );
         $this->assertEquals( $actual[2]["enqueue"][0]["admin_page"][0], "form_settings" );
     }
 
@@ -3957,7 +3957,7 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
 
         $pronto_ads_js = array(
             "handle"    => "pronto_ads_js",
-            "src"       => "http://example.org/wp-content/plugins/gravityformsconnectwise/js/pronto-ads.js",
+            "src"       => "http://example.org/wp-content/plugins/connectwise-forms-integration/js/pronto-ads.js",
             "version"   => "1.1",
             "deps"      => array( "jquery" ),
             "enqueue"   =>
@@ -3976,11 +3976,11 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
 
         $pronto_ads_js = array(
             "handle"    => "pronto_ads_js",
-            "src"       => "http://example.org/wp-content/plugins/gravityformsconnectwise/js/pronto-ads.js",
+            "src"       => "http://example.org/wp-content/plugins/connectwise-forms-integration/js/pronto-ads.js",
             "version"   => "1.1",
             "deps"      => array( "jquery" ),
             "strings" => array(
-                "path" => 'http://example.org/wp-content/plugins/gravityformsconnectwise/images/connectwise-banner.jpg'
+                "path" => 'http://example.org/wp-content/plugins/connectwise-forms-integration/images/connectwise-banner.jpg'
             ),
             "enqueue"   =>
                 array(

@@ -1,6 +1,6 @@
 <?php
 
-require_once WP_PLUGIN_DIR . "/gravityformsconnectwise/class-gf-connectwise-v3.php";
+require_once WP_PLUGIN_DIR . "/connectwise-forms-integration/class-gf-connectwise-v3.php";
 GFForms::include_feed_addon_framework();
 
 class GFConnectWiseV4 extends GFConnectWiseV3 {
