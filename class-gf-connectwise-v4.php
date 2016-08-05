@@ -35,8 +35,4 @@ class GFConnectWiseV4 extends GFConnectWise {
 
         return $team_members_list;
     }
-
-}
-}
-
 }
