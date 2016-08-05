@@ -2218,8 +2218,8 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
         $company_update_data   = array(
             array(
                 "op"    => "replace",
-                "path"  => "defaultContactId",
-                "value" => 20
+                "path"  => "defaultContact",
+                "value" => json_decode( $mock_contact_response["body"] )
             )
         );
 
@@ -2264,7 +2264,7 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
         $GF_ConnectWise->process_feed( $feed, $lead, array() );
     }
 
-    function test_primary_default_contact_data_should_use_contact_id() {
+    function test_primary_default_contact_data_not_work_should_use_contact_id() {
         $feed = array(
             "id" => "1",
             "form_id" => "1",
@@ -2364,11 +2364,11 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
             "body" => $mock_contact_data
         );
 
-        $company_update_data_with_id  = array(
+        $company_update_data   = array(
             array(
                 "op"    => "replace",
-                "path"  => "defaultContactId",
-                "value" => "20"
+                "path"  => "defaultContact",
+                "value" => json_decode( $mock_contact_response["body"] )
             )
         );
 
@@ -2407,7 +2407,7 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
                        ->with(
                             "company/companies/1",
                             "PATCH",
-                            $company_update_data_with_id
+                            $company_update_data
                        );
 
         $GF_ConnectWise->process_feed( $feed, $lead, array() );

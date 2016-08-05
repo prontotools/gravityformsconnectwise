@@ -18,6 +18,10 @@ To run, test, and develop the Multisite Login Logos plugin with Docker container
 Changelog
 ----------
 
+= 1.1.1 =
+
+* Retry with DefaultContact when DefaultContactId fail 
+
 = 1.1.0 =
 
 * Service ticket type, Service ticket subtype, Service ticket item

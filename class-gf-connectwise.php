@@ -195,11 +195,21 @@ class GFConnectWise extends GFFeedAddOn {
             $company_update_data = array(
                 array(
                     "op"    => "replace",
-                    "path"  => "defaultContactId",
-                    "value" => $contact_id
+                    "path"  => "defaultContact",
+                    "value" => $contact_data
                 )
             );
             $response     = $this->send_request( $company_url, "PATCH", $company_update_data, $error_notification = false );
+            if ( 400 == $response["response"]["code"] ) {
+                $company_update_data = array(
+                    array(
+                        "op"    => "replace",
+                        "path"  => "defaultContactId",
+                        "value" => $contact_id
+                    )
+                );
+                $response     = $this->send_request( $company_url, "PATCH", $company_update_data, $error_notification = false );
+            }
         }
 
         if ( "1" == $feed["meta"]["create_opportunity"] ) {
