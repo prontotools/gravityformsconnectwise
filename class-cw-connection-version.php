@@ -15,7 +15,7 @@ class ConnectWiseVersion extends GFAddOn {
     public function transform_url( $url ) {
         $wp_connectwise_url = $this->get_plugin_setting( "connectwise_url" );
 
-        $prefix = array( "na.", "eu.", "aus." );
+        $prefix = array( "na.", "eu.", "aus.", "staging." );
         $first_dot_pos = strpos( $wp_connectwise_url, "." );
 
         if ( true == in_array( substr( $wp_connectwise_url, 0, $first_dot_pos + 1 ), $prefix ) ) {

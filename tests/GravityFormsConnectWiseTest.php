@@ -115,7 +115,7 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
         $this->assertEquals( $actual, "auth_key" );
     }
 
-    function test_transform_url_should_add_api_path_to_url() {
+    function test_transform_url_should_add_api_infront_of_staging_connectwise_url() {
         $ConnectWiseVersion = $this->getMockBuilder( "ConnectWiseVersion" )
                                ->setMethods( array( "get_plugin_setting" ) )
                                ->getMock();
@@ -128,7 +128,7 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
                        ->with( "connectwise_url" );
 
         $input_url    = "system/members";
-        $expected_url = "https://staging.connectwisetest.com/v4_6_release/apis/3.0/system/members";
+        $expected_url = "https://api-staging.connectwisetest.com/v4_6_release/apis/3.0/system/members";
         $actual_url   = $ConnectWiseVersion->transform_url( $input_url );
 
         $this->assertEquals( $actual_url, $expected_url );

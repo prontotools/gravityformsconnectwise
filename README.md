@@ -18,6 +18,10 @@ To run, test, and develop the Multisite Login Logos plugin with Docker container
 Changelog
 ----------
 
+= 1.1.2 =
+
+* Add prefix for staging URL
+
 = 1.1.1 =
 
 * Retry with DefaultContact when DefaultContactId fail 
