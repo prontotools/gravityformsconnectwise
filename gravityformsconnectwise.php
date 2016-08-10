@@ -3,7 +3,7 @@
  * Plugin Name: Gravity Forms ConnectWise Add-On
  * Plugin URI: http://www.prontotools.io
  * Description: Integrates Gravity Forms with ConnectWise, allowing form submissions to be automatically sent to your ConnectWise account.
- * Version: 1.1.2
+ * Version: 1.1.3
  * Author: Pronto Tools
  * Author URI: http://www.prontotools.io
  * License: GNU General Public License v3.0
@@ -22,9 +22,6 @@ class GFConnectWiseBootstrap {
         if ( "2016.4" <= $version ) {
             require_once( "class-gf-connectwise-v4.php" );
             GFAddOn::register( "GFConnectWiseV4" );
-        } elseif ( "2016.3" <= $version ) {
-            require_once( "class-gf-connectwise-v3.php" );
-            GFAddOn::register( "GFConnectWiseV3" );
         } else {
             require_once( "class-gf-connectwise.php" );
             GFAddOn::register( "GFConnectWise" );
@@ -37,9 +34,6 @@ function gf_connectwise() {
     if ( "2016.4" <= $version ) {
         require_once( "class-gf-connectwise-v4.php" );
         return GFConnectWiseV4::get_instance();
-    } elseif ( "2016.3" <= $version ) {
-        require_once( "class-gf-connectwise-v3.php" );
-        return GFConnectWiseV3::get_instance();
     } else {
         require_once( "class-gf-connectwise.php" );
         return GFConnectWise::get_instance();
