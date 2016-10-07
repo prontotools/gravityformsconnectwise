@@ -18,6 +18,10 @@ To run, test, and develop the Multisite Login Logos plugin with Docker container
 Changelog
 ----------
 
+= 1.1.4 =
+
+* Add page size = 200 when get data from connectwise
+
 = 1.1.3 =
 
 * Fix unsued version control path
