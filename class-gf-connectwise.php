@@ -793,7 +793,7 @@ class GFConnectWise extends GFFeedAddOn {
 
         $department_list = array();
 
-        $get_departments_url     = "company/contacts/departments";
+        $get_departments_url     = "company/contacts/departments?pageSize=200";
         $cw_department           = $this->send_request( $get_departments_url, "GET", NULL );
         $cw_department           = json_decode( $cw_department["body"] );
         $default_department      = array(
@@ -821,7 +821,7 @@ class GFConnectWise extends GFFeedAddOn {
 
         $board_list = array();
 
-        $get_boards_url = "service/boards";
+        $get_boards_url = "service/boards?pageSize=200";
         $cw_board = $this->send_request( $get_boards_url, "GET", NULL );
         $cw_board = json_decode( $cw_board["body"] );
 
@@ -843,7 +843,7 @@ class GFConnectWise extends GFFeedAddOn {
 
         $priority_list = array();
 
-        $get_prioritys_url = "service/priorities";
+        $get_prioritys_url = "service/priorities?pageSize=200";
         $cw_priority = $this->send_request( $get_prioritys_url, "GET", NULL );
         $cw_priority = json_decode( $cw_priority["body"] );
 
@@ -880,7 +880,7 @@ class GFConnectWise extends GFFeedAddOn {
     public function get_contact_types() {
         $contact_type_list = array();
 
-        $get_contact_types_url = "company/contacts/types";
+        $get_contact_types_url = "company/contacts/types?pageSize=200";
         $cw_contact_types = $this->send_request( $get_contact_types_url, "GET", NULL );
         $cw_contact_types = json_decode( $cw_contact_types["body"] );
 
@@ -919,7 +919,7 @@ class GFConnectWise extends GFFeedAddOn {
     public function get_opportunity_types() {
         $opportunity_type_list = array();
 
-        $get_opportunity_type_url = "sales/opportunities/types";
+        $get_opportunity_type_url = "sales/opportunities/types?pageSize=200";
         $cw_opportunity_type = $this->send_request( $get_opportunity_type_url, "GET", NULL );
         $cw_opportunity_type = json_decode( $cw_opportunity_type["body"] );
         $default_opportunity_type      = array(
@@ -941,7 +941,7 @@ class GFConnectWise extends GFFeedAddOn {
     public function get_company_statuses() {
         $company_status_list = array();
 
-        $get_company_status_url = "company/companies/statuses";
+        $get_company_status_url = "company/companies/statuses?pageSize=200";
         $cw_company_status = $this->send_request( $get_company_status_url, "GET", NULL );
         $cw_company_status = json_decode( $cw_company_status["body"] );
 
@@ -958,7 +958,7 @@ class GFConnectWise extends GFFeedAddOn {
     public function get_activity_types() {
         $activity_type_list = array();
 
-        $get_activity_type_url = "sales/activities/types";
+        $get_activity_type_url = "sales/activities/types?pageSize=200";
         $cw_activity_type = $this->send_request( $get_activity_type_url, "GET", NULL );
         $cw_activity_type = json_decode( $cw_activity_type["body"] );
 
@@ -975,7 +975,7 @@ class GFConnectWise extends GFFeedAddOn {
     public function get_service_types() {
         $this->log_debug( __METHOD__ . "(): start getting service type from ConnectWise" );
         $type_list = array();
-        $get_boards_url = "service/boards";
+        $get_boards_url = "service/boards?pageSize=200";
         $cw_board = $this->send_request( $get_boards_url, "GET", NULL );
         $cw_board = json_decode( $cw_board["body"] );
         $default_board      = array(
@@ -984,7 +984,7 @@ class GFConnectWise extends GFFeedAddOn {
         );
         array_push( $type_list, $default_board );
         foreach ( $cw_board as $each_board ) {
-            $get_type_url = "service/boards/" . $each_board->id . "/types";
+            $get_type_url = "service/boards/" . $each_board->id . "/types?pageSize=200";
             $cw_service_type = $this->send_request( $get_type_url, "GET", NULL );
             $cw_service_type = json_decode( $cw_service_type["body"] );
             $choices = array();
@@ -1008,7 +1008,7 @@ class GFConnectWise extends GFFeedAddOn {
     public function get_service_subtypes() {
         $this->log_debug( __METHOD__ . "(): start getting service subtype from ConnectWise" );
         $subtype_list = array();
-        $get_boards_url = "service/boards";
+        $get_boards_url = "service/boards?pageSize=200";
         $cw_board = $this->send_request( $get_boards_url, "GET", NULL );
         $cw_board = json_decode( $cw_board["body"] );
         $default_board      = array(
@@ -1017,7 +1017,7 @@ class GFConnectWise extends GFFeedAddOn {
         );
         array_push( $subtype_list, $default_board );
         foreach ( $cw_board as $each_board ) {
-            $get_subtype_url = "service/boards/" . $each_board->id . "/subtypes";
+            $get_subtype_url = "service/boards/" . $each_board->id . "/subtypes?pageSize=200";
             $cw_service_subtype = $this->send_request( $get_subtype_url, "GET", NULL );
             $cw_service_subtype = json_decode( $cw_service_subtype["body"] );
             $choices = array();
@@ -1041,7 +1041,7 @@ class GFConnectWise extends GFFeedAddOn {
     public function get_service_item() {
         $this->log_debug( __METHOD__ . "(): start getting service item from ConnectWise" );
         $item_list = array();
-        $get_boards_url = "service/boards";
+        $get_boards_url = "service/boards?pageSize=200";
         $cw_board = $this->send_request( $get_boards_url, "GET", NULL );
         $cw_board = json_decode( $cw_board["body"] );
         $default_board      = array(
@@ -1050,7 +1050,7 @@ class GFConnectWise extends GFFeedAddOn {
         );
         array_push( $item_list, $default_board );
         foreach ( $cw_board as $each_board ) {
-            $get_item_url = "service/boards/" . $each_board->id . "/items";
+            $get_item_url = "service/boards/" . $each_board->id . "/items?pageSize=200";
             $cw_service_item = $this->send_request( $get_item_url, "GET", NULL );
             $cw_service_item = json_decode( $cw_service_item["body"] );
             $choices = array();

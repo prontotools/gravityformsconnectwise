@@ -3770,13 +3770,13 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
         $GF_ConnectWise->expects( $this->at( 0 ) )
             ->method( "send_request" )
             ->with(
-                "service/boards",
+                "service/boards?pageSize=200",
                 "GET",
                 NULL
             )
             ->will( $this->returnValue( $mock_board_response ) );
 
-        $board_url = "service/boards/1/types";
+        $board_url = "service/boards/1/types?pageSize=200";
 
         $mock_service_types_response = array(
             "body" => '[{"id": "1", "name": "Break-fix"},{"id": "2", "name": "Proactive"}]'
@@ -3827,13 +3827,13 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
         $GF_ConnectWise->expects( $this->at( 0 ) )
             ->method( "send_request" )
             ->with(
-                "service/boards",
+                "service/boards?pageSize=200",
                 "GET",
                 NULL
             )
             ->will( $this->returnValue( $mock_board_response ) );
 
-        $board_url = "service/boards/1/subtypes";
+        $board_url = "service/boards/1/subtypes?pageSize=200";
 
         $mock_service_subtypes_response = array(
             "body" => '[{"id": "1", "name": "CRM"},{"id": "2", "name": "RMM"}]'
@@ -3884,13 +3884,13 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
         $GF_ConnectWise->expects( $this->at( 0 ) )
             ->method( "send_request" )
             ->with(
-                "service/boards",
+                "service/boards?pageSize=200",
                 "GET",
                 NULL
             )
             ->will( $this->returnValue( $mock_board_response ) );
 
-        $board_url = "service/boards/1/items";
+        $board_url = "service/boards/1/items?pageSize=200";
 
         $mock_service_item_response = array(
             "body" => '[{"id": "1", "name": "Service Board"},{"id": "2", "name": "Workflow Rules"}]'
