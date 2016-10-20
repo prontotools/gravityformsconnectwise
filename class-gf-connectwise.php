@@ -135,7 +135,7 @@ class GFConnectWise extends GFFeedAddOn {
 
             if ( "" != $feed["meta"]["company_note"] ) {
                 $note                 = GFCommon::replace_variables( $feed["meta"]["company_note"], $form, $lead, false, false, false, "html" );
-                $company_data["note"] = $note;
+                $company_data["note"] = strip_tags($note);
             }
 
             $url = "company/companies";
@@ -164,7 +164,7 @@ class GFConnectWise extends GFFeedAddOn {
 
             if ( "" != $feed["meta"]["contact_note"] ) {
                 $note                 = GFCommon::replace_variables( $feed["meta"]["contact_note"], $form, $lead, false, false, false, "html" );
-                $contact_data["note"] = $note;
+                $contact_data["note"] = strip_tags($note);
             }
 
             $url          = "company/contacts";
@@ -230,6 +230,7 @@ class GFConnectWise extends GFFeedAddOn {
             $opportunity_data = array(
                 "name"    => GFCommon::replace_variables( $feed["meta"]["opportunity_name"], $form, $lead, false, false, false, "html" ),
                 "company" => array(
+                    "id"         => $company_id,
                     "identifier" => $identifier
                 ),
                 "contact" => array(
@@ -261,7 +262,7 @@ class GFConnectWise extends GFFeedAddOn {
 
             if ( "" != $feed["meta"]["opportunity_note"] ) {
                 $note  = GFCommon::replace_variables( $feed["meta"]["opportunity_note"], $form, $lead, false, false, false, "html" );
-                $opportunity_data["notes"] = $note;
+                $opportunity_data["notes"] = strip_tags($note);
             }
 
             $url = "sales/opportunities";
@@ -314,7 +315,7 @@ class GFConnectWise extends GFFeedAddOn {
 
             if ( "" != $feed["meta"]["activity_note"] ) {
                 $note  = GFCommon::replace_variables( $feed["meta"]["activity_note"], $form, $lead, false, false, false, "html" );
-                $activity_data["notes"] = $note;
+                $activity_data["notes"] = strip_tags($note);
             }
 
             $url = "sales/activities";
