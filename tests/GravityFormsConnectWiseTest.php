@@ -2827,6 +2827,7 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
                 "id" => "1"
             ),
             "company"           => array(
+                "id"            => "1",
                 "identifier"    => "Catchall"
             ),
             "contact"           => array(
@@ -2955,6 +2956,7 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
         $opportunity_data = array(
             "name"              => $feed["meta"]["opportunity_name"],
             "company"           => array(
+                "id"            => "1",
                 "identifier"    => "Catchall"
             ),
             "contact"           => array(
@@ -3142,6 +3144,7 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
                 "id" => "1"
             ),
             "company" => array(
+                "id"         => "1",
                 "identifier" => "TestCompany"
             ),
             "contact" => array(
@@ -3331,6 +3334,7 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
                 "id" => "1"
             ),
             "company" => array(
+                "id"         => "1",
                 "identifier" => "TestCompany"
             ),
             "contact" => array(
@@ -3559,6 +3563,7 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
                 "id" => "1"
             ),
             "company" => array(
+                "id"            => "1",
                 "identifier"    => "TestCompany"
             ),
             "contact" => array(
