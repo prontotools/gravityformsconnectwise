@@ -18,6 +18,11 @@ To run, test, and develop the Multisite Login Logos plugin with Docker container
 Changelog
 ----------
 
+= 1.2.0 =
+
+* Add company_id when create new opportunity for version 2017_1 
+* Strip HTML tags when add note to ConnectWise 
+
 = 1.1.4 =
 
 * Add page size = 200 when get data from connectwise
