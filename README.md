@@ -18,6 +18,10 @@ To run, test, and develop the Multisite Login Logos plugin with Docker container
 Changelog
 ----------
 
+= 1.2.1 =
+
+* Add company_id when create new activity and new service ticket for version 2017_1 
+
 = 1.2.0 =
 
 * Add company_id when create new opportunity for version 2017_1 
