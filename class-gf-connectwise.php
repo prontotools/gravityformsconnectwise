@@ -293,6 +293,7 @@ class GFConnectWise extends GFFeedAddOn {
                     "id"   => $feed["meta"]["activity_type"]
                 ),
                 "company" => array(
+                    "id"         => $company_id,
                     "identifier" => $identifier
                 ),
                 "contact" => array(
@@ -322,13 +323,13 @@ class GFConnectWise extends GFFeedAddOn {
             $response = $this->send_request( $url, "POST", $activity_data );
         }
 
-
         if ( "1" == $feed["meta"]["create_service_ticket"] ) {
             $url = "service/tickets";
             $ticket_data = array(
                 "summary"            => GFCommon::replace_variables( $feed["meta"]["service_ticket_summary"], $form, $lead, false, false, false, "html" ),
                 "initialDescription" => GFCommon::replace_variables( $feed["meta"]["service_ticket_initial_description"], $form, $lead, false, false, false, "html" ),
                 "company"            => array(
+                    "id"         => $company_id,
                     "identifier" => $identifier,
                 )
             );

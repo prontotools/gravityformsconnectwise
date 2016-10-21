@@ -2517,6 +2517,7 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
             "summary"            => "Test Ticket Name",
             "initialDescription" => "Test Ticket Description",
             "company"            => array(
+                "id"         => null,
                 "identifier" => "Catchall",
             )
         );
@@ -2560,6 +2561,7 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
             "summary"            => "Test Ticket Name",
             "initialDescription" => "Test Ticket Description",
             "company"            => array(
+                "id"         => null,
                 "identifier" => "Catchall",
             ),
             "board"              => array(
@@ -2607,6 +2609,7 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
             "summary"            => "Test Ticket Name",
             "initialDescription" => "Test Ticket Description",
             "company"            => array(
+                "id"         => null,
                 "identifier" => "Catchall",
             ),
             "priority"           => array(
@@ -2744,6 +2747,7 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
             "summary"            => "Test Ticket Name",
             "initialDescription" => "Test Ticket Description",
             "company"            => array(
+                "id"         => 0,
                 "identifier" => "TestCompany",
             )
         );
@@ -3363,6 +3367,7 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
                 "id" => "1",
             ),
             "company" => array(
+                "id"         => "1",
                 "identifier" => "TestCompany"
             ),
             "contact" => array(
@@ -3592,6 +3597,7 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
                 "id" => "1",
             ),
             "company" => array(
+                "id"         => "1",
                 "identifier" => "TestCompany"
             ),
             "contact" => array(
