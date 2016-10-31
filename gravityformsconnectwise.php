@@ -3,7 +3,7 @@
  * Plugin Name: Gravity Forms ConnectWise Add-On
  * Plugin URI: http://www.prontotools.io
  * Description: Integrates Gravity Forms with ConnectWise, allowing form submissions to be automatically sent to your ConnectWise account.
- * Version: 1.2.1
+ * Version: 1.2.2
  * Author: Pronto Tools
  * Author URI: http://www.prontotools.io
  * License: GNU General Public License v3.0
