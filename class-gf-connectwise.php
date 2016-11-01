@@ -133,11 +133,6 @@ class GFConnectWise extends GFFeedAddOn {
                 $company_data["leadFlag"] = true;
             }
 
-            if ( "" != $feed["meta"]["company_note"] ) {
-                $note                 = GFCommon::replace_variables( $feed["meta"]["company_note"], $form, $lead, false, false, false, "html" );
-                $company_data["note"] = strip_tags($note);
-            }
-
             $url = "company/companies";
             $response = $this->send_request( $url, "POST", $company_data );
         }
@@ -162,14 +157,10 @@ class GFConnectWise extends GFFeedAddOn {
                 );
             }
 
-            if ( "" != $feed["meta"]["contact_note"] ) {
-                $note                 = GFCommon::replace_variables( $feed["meta"]["contact_note"], $form, $lead, false, false, false, "html" );
-                $contact_data["note"] = strip_tags($note);
-            }
-
             $url          = "company/contacts";
             $response     = $this->send_request( $url, "POST", $contact_data );
             $contact_data = json_decode( $response["body"] );
+
             $comunication_types = array(
                 "value"             => $lead[ $email ],
                 "communicationType" => "Email",
@@ -183,12 +174,36 @@ class GFConnectWise extends GFFeedAddOn {
             $contact_id = $contact_data->id;
             $url        = "company/contacts/{$contact_id}/communications";
             $response   = $this->send_request( $url, "POST", $comunication_types );
+
+            if ( "" != $feed["meta"]["contact_note"] ) {
+                $note                 = GFCommon::replace_variables( $feed["meta"]["contact_note"], $form, $lead, false, false, false, "html" );
+                $contact_note = strip_tags($note);
+                
+                $contact_note = array(
+                    "text" => $contact_note
+                );
+                
+                $url          = "company/contacts/{$contact_id}/notes";
+                $response     = $this->send_request( $url, "POST", $contact_note );
+            }
         }
 
         $get_company_url = "company/companies?conditions=identifier='{$identifier}'";
         $response        = $this->send_request( $get_company_url, "GET", NULL );
         $company_data    = json_decode( $response["body"]);
         $company_id      = $company_data[0]->id;
+        
+        if ( "" != $feed["meta"]["company_note"] ) {
+            $note         = GFCommon::replace_variables( $feed["meta"]["company_note"], $form, $lead, false, false, false, "html" );
+            $company_note = strip_tags($note);
+            
+            $company_note = array(
+                "text" => $company_note
+            );
+
+            $url          = "company/companies/{$company_id}/notes";
+            $response     = $this->send_request( $url, "POST", $company_note );
+        }
 
         if ( "Catchall" != $identifier ){
             $company_url = "company/companies/{$company_id}";

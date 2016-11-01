@@ -1925,7 +1925,6 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
         $contact_data = array(
             "firstName"          => "Test Firstname",
             "lastName"           => "Test Lastname",
-            "note"               => "Please call this contact",
             "company"            => array(
                 "identifier" => "Catchall",
             ),
@@ -1937,15 +1936,25 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
             )
         );
 
-        $note_data = array(
-            "text" => "Please call this contact"
-        );
+        $comunication_data = array(
+                "value"             => "test@test.com",
+                "communicationType" => "Email",
+                "type"              => array(
+                    "id"   => 1,
+                    "name" => "Email"
+                ),
+                "defaultFlag" => true,
+            );
 
         $mock_contact_data = '{"id":1}';
         $mock_contact_response = array(
             "body" => $mock_contact_data
         );
 
+        $note_data = array(
+            "text" => "Please call this contact"
+        );
+        
         $GF_ConnectWise = $this->getMockBuilder( "GFConnectWise" )
             ->setMethods( array( "send_request", "get_existing_contact" ) )
             ->getMock();
@@ -1963,6 +1972,22 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
             )
             ->will( $this->returnValue( $mock_contact_response ) );
 
+        $GF_ConnectWise->expects( $this->at( 2 ) )
+                       ->method( "send_request" )
+                       ->with(
+                            "company/contacts/1/communications",
+                            "POST",
+                            $comunication_data
+                       );
+
+        $GF_ConnectWise->expects( $this->at( 3 ) )
+                       ->method( "send_request" )
+                       ->with(
+                            "company/contacts/1/notes",
+                            "POST",
+                            $note_data
+                        );
+
         $GF_ConnectWise->process_feed( $feed, $lead, array() );
     }
 
@@ -1979,7 +2004,6 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
                 "contact_department"            => "---------------",
                 "company_type"                  => "1",
                 "company_status"                => "1",
-                "contact_note"                  => "Please call this contact",
                 "company_map_fields"            => array(
                     array(
                         "key"        => "company",
@@ -2003,7 +2027,6 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
         $contact_data = array(
             "firstName"          => "Test Firstname",
             "lastName"           => "Test Lastname",
-            "note"               => "Please call this contact",
             "company"            => array(
                 "identifier" => "Catchall",
             ),
@@ -2054,7 +2077,7 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
                 "contact_department"             => "2",
                 "company_type"                   => "1",
                 "company_status"                 => "1",
-                "company_note"                   => "Here is a company note",
+                "company_note"                   => "Company Note",
                 "company_map_fields"             => array(
                     array(
                         "key"        => "company",
@@ -2087,13 +2110,20 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
             "phoneNumber"  => NULL,
             "faxNumber"    => NULL,
             "website"      => NULL,
-            "note"         => "Here is a company note",
             "type"         => array(
                 "id" => "1"
             ),
             "status"       => array(
                 "id" => "1"
             )
+        );
+
+        $company_note = array(
+            "text" => "Company Note"
+        );
+
+        $mock_company_response = array(
+            "body" => '[{"id": 1}]'
         );
 
         $GF_ConnectWise = $this->getMockBuilder( "GFConnectWise" )
@@ -2112,6 +2142,21 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
             ->method( "get_existing_contact" )
             ->will( $this->returnValue( false ) );
 
+        $GF_ConnectWise->expects( $this->at( 4 ) )
+                       ->method( "send_request" )
+                       ->with(
+                            "company/companies?conditions=identifier='TestCompany'"
+                        )
+                       ->will( $this->returnValue( $mock_company_response ) );
+
+        $GF_ConnectWise->expects( $this->at( 5 ) )
+                       ->method( "send_request" )
+                       ->with(
+                            "company/companies/1/notes",
+                            "POST",
+                            $company_note
+                       );
+
         $GF_ConnectWise->process_feed( $feed, $lead, array() );
     }
 
@@ -2128,7 +2173,6 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
                 "contact_department"             => "2",
                 "company_type"                   => "1",
                 "company_status"                 => "1",
-                "company_note"                   => "Here is a company note",
                 "company_map_fields"             => array(
                     array(
                         "key"        => "company",
@@ -2161,7 +2205,6 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
             "phoneNumber"  => NULL,
             "faxNumber"    => NULL,
             "website"      => NULL,
-            "note"         => "Here is a company note",
             "type"         => array(
                 "id" => "1"
             ),
@@ -2277,7 +2320,6 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
                 "contact_department"             => "2",
                 "company_type"                   => "1",
                 "company_status"                 => "1",
-                "company_note"                   => "Here is a company note",
                 "company_map_fields"             => array(
                     array(
                         "key"        => "company",
@@ -2310,7 +2352,6 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
             "phoneNumber"  => NULL,
             "faxNumber"    => NULL,
             "website"      => NULL,
-            "note"         => "Here is a company note",
             "type"         => array(
                 "id" => "1"
             ),
