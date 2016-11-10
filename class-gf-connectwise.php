@@ -73,6 +73,8 @@ class GFConnectWise extends GFFeedAddOn {
             }
         }
 
+        $contact_data = $this->get_existing_contact( $lead[ $first_name ], $lead[ $email ] );
+
         if ( NULL == $company or "" == $lead[ $company ] ) {
             $identifier = "Catchall";
         } else {
@@ -133,11 +135,20 @@ class GFConnectWise extends GFFeedAddOn {
                 $company_data["leadFlag"] = true;
             }
 
-            $url = "company/companies";
-            $response = $this->send_request( $url, "POST", $company_data );
+            if ( !empty( $contact_data ) ) {
+                $identifier = $contact_data->company->identifier;
+                if( NULL == $identifier ) {
+                    $url      = "company/companies";
+                    $response = $this->send_request( $url, "POST", $company_data );
+                    $company_response = json_decode( $response["body"]);
+                    $company_id       = $company_response->id;
+                    $identifier       = $company_response->identifier;
+                }
+            } else {
+                $url = "company/companies";
+                $response = $this->send_request( $url, "POST", $company_data );
+            }
         }
-
-        $contact_data = $this->get_existing_contact( $lead[ $first_name ], $lead[ $email ] );
 
         if ( !$contact_data ) {
             $contact_data = array(
@@ -192,7 +203,7 @@ class GFConnectWise extends GFFeedAddOn {
         $response        = $this->send_request( $get_company_url, "GET", NULL );
         $company_data    = json_decode( $response["body"]);
         $company_id      = $company_data[0]->id;
-        
+
         if ( "" != $feed["meta"]["company_note"] ) {
             $note         = GFCommon::replace_variables( $feed["meta"]["company_note"], $form, $lead, false, false, false, "html" );
             $company_note = strip_tags($note);
@@ -413,6 +424,7 @@ class GFConnectWise extends GFFeedAddOn {
                 }
             }
         }
+
         return false;
     }
 

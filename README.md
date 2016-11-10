@@ -18,6 +18,9 @@ To run, test, and develop the Multisite Login Logos plugin with Docker container
 Changelog
 ----------
 
+= 1.2.3 =
+* Match contact and email before create company 
+
 = 1.2.2 =
 * Create Note in Contact and Company
 

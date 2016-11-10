@@ -983,6 +983,10 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
             ->getMock();
 
         $GF_ConnectWise->expects( $this->at(0) )
+            ->method( "get_existing_contact" )
+            ->will( $this->returnValue( false ) );
+
+        $GF_ConnectWise->expects( $this->at(1) )
             ->method( "send_request" )
             ->with(
                 "company/companies",
@@ -1148,17 +1152,17 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
             ->setMethods( array( "send_request", "get_existing_contact" ) )
             ->getMock();
 
-        $GF_ConnectWise->expects( $this->at( 0 ) )
+        $GF_ConnectWise->expects( $this->at(0) )
+            ->method( "get_existing_contact" )
+            ->will( $this->returnValue( false ) );
+
+        $GF_ConnectWise->expects( $this->at( 1 ) )
             ->method( "send_request" )
             ->with(
                 "company/companies",
                 "POST",
                 $company_data
             );
-
-        $GF_ConnectWise->expects( $this->at(1) )
-            ->method( "get_existing_contact" )
-            ->will( $this->returnValue( false ) );
 
         $mock_contact_data = '{"id":1}';
         $mock_contact_response = array(
@@ -1316,17 +1320,17 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
             ->setMethods( array( "send_request", "get_existing_contact" ) )
             ->getMock();
 
-        $GF_ConnectWise->expects( $this->at( 0 ) )
+        $GF_ConnectWise->expects( $this->at(0) )
+            ->method( "get_existing_contact" )
+            ->will( $this->returnValue( false ) );
+
+        $GF_ConnectWise->expects( $this->at( 1 ) )
             ->method( "send_request" )
             ->with(
                 "company/companies",
                 "POST",
                 $company_data
             );
-
-        $GF_ConnectWise->expects( $this->at(1) )
-            ->method( "get_existing_contact" )
-            ->will( $this->returnValue( false ) );
 
         $mock_contact_data = '{"id":1}';
         $mock_contact_response = array(
@@ -1433,7 +1437,7 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
             ->setMethods( array( "send_request", "get_existing_contact" ) )
             ->getMock();
 
-        $GF_ConnectWise->expects( $this->at( 0 ) )
+        $GF_ConnectWise->expects( $this->at( 1 ) )
             ->method( "send_request" )
             ->with(
                 "company/companies",
@@ -1616,7 +1620,8 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
             ),
             "department"         => array(
                 "id"         => "1"
-            )
+            ),
+            "communicationItems" => $communication_types
         );
 
         $GF_ConnectWise = $this->getMockBuilder( "GFConnectWise" )
@@ -1649,23 +1654,15 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
         );
 
         $GF_ConnectWise->expects( $this->at( 0 ) )
+            ->method( "get_existing_contact" )
+            ->will( $this->returnValue( $mock_contact_response ) );
+
+        $GF_ConnectWise->expects( $this->at( 1 ) )
             ->method( "send_request" )
             ->with(
                 "company/companies",
                 "POST",
                 $company_data
-            );
-
-        $GF_ConnectWise->expects( $this->at( 1 ) )
-            ->method( "get_existing_contact" )
-            ->will( $this->returnValue( $mock_contact_response ) );
-
-        $GF_ConnectWise->expects( $this->at( 2 ) )
-            ->method( "send_request" )
-            ->with(
-                "company/companies?conditions=identifier='NewCompany'",
-                "GET",
-                $NULL
             );
 
         $GF_ConnectWise->process_feed( $feed, $lead, NULL );
@@ -1753,16 +1750,16 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
         );
 
         $GF_ConnectWise->expects( $this->at( 0 ) )
+            ->method( "get_existing_contact" )
+            ->will( $this->returnValue( false ) );
+
+        $GF_ConnectWise->expects( $this->at( 1 ) )
             ->method( "send_request" )
             ->with(
                 "company/companies",
                 "POST",
                 $company_data
             );
-
-        $GF_ConnectWise->expects( $this->at( 1 ) )
-            ->method( "get_existing_contact" )
-            ->will( $this->returnValue( false ) );
 
         $mock_contact_data = '{"id":1}';
         $mock_contact_response = array(
@@ -2131,16 +2128,16 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
                                ->getMock();
 
         $GF_ConnectWise->expects( $this->at( 0 ) )
+            ->method( "get_existing_contact" )
+            ->will( $this->returnValue( false ) );
+
+        $GF_ConnectWise->expects( $this->at( 1 ) )
                        ->method( "send_request" )
                        ->with(
                             "company/companies",
                             "POST",
                             $company_data
                        );
-
-        $GF_ConnectWise->expects( $this->at( 1 ) )
-            ->method( "get_existing_contact" )
-            ->will( $this->returnValue( false ) );
 
         $GF_ConnectWise->expects( $this->at( 4 ) )
                        ->method( "send_request" )
@@ -2242,16 +2239,16 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
                                ->getMock();
 
         $GF_ConnectWise->expects( $this->at( 0 ) )
+            ->method( "get_existing_contact" )
+            ->will( $this->returnValue( false ) );
+
+        $GF_ConnectWise->expects( $this->at( 1 ) )
                        ->method( "send_request" )
                        ->with(
                             "company/companies",
                             "POST",
                             $company_data
                        );
-
-        $GF_ConnectWise->expects( $this->at( 1 ) )
-            ->method( "get_existing_contact" )
-            ->will( $this->returnValue( false ) );
 
         $mock_contact_data = '{"id":20}';
         $mock_contact_response = array(
@@ -2389,16 +2386,16 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
                                ->getMock();
 
         $GF_ConnectWise->expects( $this->at( 0 ) )
+            ->method( "get_existing_contact" )
+            ->will( $this->returnValue( false ) );
+
+        $GF_ConnectWise->expects( $this->at( 1 ) )
                        ->method( "send_request" )
                        ->with(
                             "company/companies",
                             "POST",
                             $company_data
                        );
-
-        $GF_ConnectWise->expects( $this->at( 1 ) )
-            ->method( "get_existing_contact" )
-            ->will( $this->returnValue( false ) );
 
         $mock_contact_data = '{"id":20}';
         $mock_contact_response = array(
@@ -2806,16 +2803,16 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
             ->getMock();
 
         $GF_ConnectWise->expects( $this->at( 0 ) )
+            ->method( "get_existing_contact" )
+            ->will( $this->returnValue( false ) );
+
+        $GF_ConnectWise->expects( $this->at( 1 ) )
             ->method( "send_request" )
             ->with(
                 "company/companies",
                 "POST",
                 $company_data
             );
-
-        $GF_ConnectWise->expects( $this->at( 1 ) )
-            ->method( "get_existing_contact" )
-            ->will( $this->returnValue( false ) );
 
         $GF_ConnectWise->expects( $this->at( 6 ) )
             ->method( "send_request" )
@@ -3214,16 +3211,16 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
             ->getMock();
 
         $GF_ConnectWise->expects( $this->at( 0 ) )
+            ->method( "get_existing_contact" )
+            ->will( $this->returnValue( false ) );
+
+        $GF_ConnectWise->expects( $this->at( 1 ) )
             ->method( "send_request" )
             ->with(
                 "company/companies",
                 "POST",
                 $company_data
             );
-
-        $GF_ConnectWise->expects( $this->at( 1 ) )
-            ->method( "get_existing_contact" )
-            ->will( $this->returnValue( false ) );
 
         $mock_contact_data = '{"id":1, "firstName": "Firstname", "lastName": "Lastname"}';
         $mock_contact_response = array(
@@ -3435,16 +3432,16 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
             ->getMock();
 
         $GF_ConnectWise->expects( $this->at( 0 ) )
+            ->method( "get_existing_contact" )
+            ->will( $this->returnValue( false ) );
+
+        $GF_ConnectWise->expects( $this->at( 1 ) )
             ->method( "send_request" )
             ->with(
                 "company/companies",
                 "POST",
                 $company_data
             );
-
-        $GF_ConnectWise->expects( $this->at( 1 ) )
-            ->method( "get_existing_contact" )
-            ->will( $this->returnValue( false ) );
 
         $mock_contact_data = '{"id":1, "firstName": "Firstname", "lastName": "Lastname"}';
         $mock_contact_response = array(
@@ -3664,16 +3661,16 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
             ->getMock();
 
         $GF_ConnectWise->expects( $this->at( 0 ) )
+            ->method( "get_existing_contact" )
+            ->will( $this->returnValue( false ) );
+
+        $GF_ConnectWise->expects( $this->at( 1 ) )
             ->method( "send_request" )
             ->with(
                 "company/companies",
                 "POST",
                 $company_data
             );
-
-        $GF_ConnectWise->expects( $this->at( 1 ) )
-            ->method( "get_existing_contact" )
-            ->will( $this->returnValue( false ) );
 
         $mock_contact_data = '{"id":1, "firstName": "Firstname", "lastName": "Lastname"}';
         $mock_contact_response = array(
