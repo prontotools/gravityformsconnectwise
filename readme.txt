@@ -3,7 +3,7 @@ Contributors: prontotools, oynp
 Tags: connectwise, gravity forms, add-on, contact form, integration, psa, lead, marketing automation
 Requires at least: 4.0
 Tested up to: 4.5.1
-Stable tag: 1.2.3
+Stable tag: 1.2.4
 Copyright: © 2016 Pronto Tools
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html 
@@ -71,6 +71,9 @@ You can view a [detailed flow chart of the process here](https://pronto.bypronto
 5. Enable conditional logic to have a feed send data only for specific events.
 
 == Changelog ==
+
+= 1.2.4 =
+* Improve error email notification, should not send when have error about duplicate company ID  
 
 = 1.2.3 =
 * Match contact and email before create company 

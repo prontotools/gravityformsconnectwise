@@ -895,7 +895,7 @@ class GFConnectWise extends GFFeedAddOn {
         $get_company_type_url = "company/companies/types?pageSize=200";
         $cw_company_type = $this->send_request( $get_company_type_url, "GET", NULL );
         $cw_company_type = json_decode( $cw_company_type["body"] );
-
+        
         foreach ( $cw_company_type as $each_company_type ) {
             $company_type = array(
                 "label" => esc_html__( $each_company_type->name, "gravityformsconnectwise" ),
@@ -929,6 +929,7 @@ class GFConnectWise extends GFFeedAddOn {
         $get_campaign_url      = "marketing/campaigns?pageSize=200";
         $cw_marketing_campaign = $this->send_request( $get_campaign_url, "GET", NULL );
         $cw_marketing_campaign = json_decode( $cw_marketing_campaign["body"] );
+        
         $default_campaing      = array(
             "label" => esc_html__( "---------------", "gravityformsconnectwise" ),
             "value" => NULL
@@ -951,6 +952,7 @@ class GFConnectWise extends GFFeedAddOn {
         $get_opportunity_type_url = "sales/opportunities/types?pageSize=200";
         $cw_opportunity_type = $this->send_request( $get_opportunity_type_url, "GET", NULL );
         $cw_opportunity_type = json_decode( $cw_opportunity_type["body"] );
+
         $default_opportunity_type      = array(
             "label" => esc_html__( "---------------", "gravityformsconnectwise" ),
             "value" => NULL
@@ -1007,6 +1009,7 @@ class GFConnectWise extends GFFeedAddOn {
         $get_boards_url = "service/boards?pageSize=200";
         $cw_board = $this->send_request( $get_boards_url, "GET", NULL );
         $cw_board = json_decode( $cw_board["body"] );
+        
         $default_board      = array(
             "label" => esc_html__( "---------------", "gravityformsconnectwise" ),
             "value" => NULL
@@ -1016,6 +1019,7 @@ class GFConnectWise extends GFFeedAddOn {
             $get_type_url = "service/boards/" . $each_board->id . "/types?pageSize=200";
             $cw_service_type = $this->send_request( $get_type_url, "GET", NULL );
             $cw_service_type = json_decode( $cw_service_type["body"] );
+
             $choices = array();
             foreach ( $cw_service_type as $each_type ) {
                 $type = array(
@@ -1049,6 +1053,7 @@ class GFConnectWise extends GFFeedAddOn {
             $get_subtype_url = "service/boards/" . $each_board->id . "/subtypes?pageSize=200";
             $cw_service_subtype = $this->send_request( $get_subtype_url, "GET", NULL );
             $cw_service_subtype = json_decode( $cw_service_subtype["body"] );
+            
             $choices = array();
             foreach ( $cw_service_subtype as $each_subtype ) {
                 $subtype = array(
@@ -1293,7 +1298,7 @@ class GFConnectWise extends GFFeedAddOn {
 
     public function send_error_notification( $response_body, $response_code, $url, $body ) {
         $to = $this->get_plugin_setting( "error_notification_emails_to" );
-
+        
         if ( empty( $to ) ) {
             $to = get_option( "admin_email" );
         }
@@ -1365,7 +1370,8 @@ class GFConnectWise extends GFFeedAddOn {
         }
 
         if ( true == $error_notification && "1" == $enable_error_mail ) {
-            if ( 400 <= $response["response"]["code"] ) {
+            $not_error_msg = "Company ID already in use.";
+            if ( 400 <= $response["response"]["code"] && strpos($response["body"], $not_error_msg) !== false ) {
                 $this->send_error_notification( $response["body"], $response["response"]["code"], $url, $body );
             }
         }
