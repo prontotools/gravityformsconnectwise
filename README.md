@@ -18,6 +18,9 @@ To run, test, and develop the Multisite Login Logos plugin with Docker container
 Changelog
 ----------
 
+= 1.2.5 =
+* Fix bug for send error email notification 
+
 = 1.2.4 =
 * Improve error email notification, should not send when have error about duplicate company ID  
 

@@ -1371,7 +1371,8 @@ class GFConnectWise extends GFFeedAddOn {
 
         if ( true == $error_notification && "1" == $enable_error_mail ) {
             $not_error_msg = "Company ID already in use.";
-            if ( 400 <= $response["response"]["code"] && strpos($response["body"], $not_error_msg) !== false ) {
+
+            if ( 400 <= $response["response"]["code"] && strpos($response["body"], $not_error_msg) == false ) {
                 $this->send_error_notification( $response["body"], $response["response"]["code"], $url, $body );
             }
         }
