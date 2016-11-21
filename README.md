@@ -18,6 +18,9 @@ To run, test, and develop the Multisite Login Logos plugin with Docker container
 Changelog
 ----------
 
+= 1.2.6 =
+* Extend timeout when request to get data from ConnectWise API 
+
 = 1.2.5 =
 * Fix bug for send error email notification 
 

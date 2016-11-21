@@ -1341,6 +1341,7 @@ class GFConnectWise extends GFFeedAddOn {
         $enable_error_mail = $this->get_plugin_setting( "enable_error_notification_emails" );
 
         $args = array(
+            "timeout" => 120,
             "method"  => $request_method,
             "body"    => $body,
             "headers" => array(
