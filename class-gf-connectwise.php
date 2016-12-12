@@ -73,7 +73,8 @@ class GFConnectWise extends GFFeedAddOn {
             }
         }
 
-        $contact_data = $this->get_existing_contact( $lead[ $first_name ], $lead[ $email ] );
+        $email = strtolower( $lead[ $email ] );
+        $contact_data = $this->get_existing_contact( $lead[ $first_name ], $email );
 
         if ( NULL == $company or "" == $lead[ $company ] ) {
             $identifier = "Catchall";
@@ -173,7 +174,7 @@ class GFConnectWise extends GFFeedAddOn {
             $contact_data = json_decode( $response["body"] );
 
             $comunication_types = array(
-                "value"             => $lead[ $email ],
+                "value"             => $email,
                 "communicationType" => "Email",
                 "type"              => array(
                     "id"   => 1,
@@ -189,11 +190,11 @@ class GFConnectWise extends GFFeedAddOn {
             if ( "" != $feed["meta"]["contact_note"] ) {
                 $note                 = GFCommon::replace_variables( $feed["meta"]["contact_note"], $form, $lead, false, false, false, "html" );
                 $contact_note = strip_tags($note);
-                
+
                 $contact_note = array(
                     "text" => $contact_note
                 );
-                
+
                 $url          = "company/contacts/{$contact_id}/notes";
                 $response     = $this->send_request( $url, "POST", $contact_note );
             }
@@ -207,7 +208,7 @@ class GFConnectWise extends GFFeedAddOn {
         if ( "" != $feed["meta"]["company_note"] ) {
             $note         = GFCommon::replace_variables( $feed["meta"]["company_note"], $form, $lead, false, false, false, "html" );
             $company_note = strip_tags($note);
-            
+
             $company_note = array(
                 "text" => $company_note
             );
@@ -314,7 +315,7 @@ class GFConnectWise extends GFFeedAddOn {
 
             $activity_data = array(
                 "name"  => $activity_name,
-                "email" => $lead[ $email ],
+                "email" => $email,
                 "type"  => array(
                     "id"   => $feed["meta"]["activity_type"]
                 ),
@@ -389,6 +390,7 @@ class GFConnectWise extends GFFeedAddOn {
                     "id" => $ticket_item
                 );
             }
+
             $response = $this->send_request( $url, "POST", $ticket_data);
         }
         $this->log_debug( "# " . __METHOD__ . "(): finish sending data to ConnectWise #" );
@@ -895,7 +897,7 @@ class GFConnectWise extends GFFeedAddOn {
         $get_company_type_url = "company/companies/types?pageSize=200";
         $cw_company_type = $this->send_request( $get_company_type_url, "GET", NULL );
         $cw_company_type = json_decode( $cw_company_type["body"] );
-        
+
         foreach ( $cw_company_type as $each_company_type ) {
             $company_type = array(
                 "label" => esc_html__( $each_company_type->name, "gravityformsconnectwise" ),
@@ -929,7 +931,7 @@ class GFConnectWise extends GFFeedAddOn {
         $get_campaign_url      = "marketing/campaigns?pageSize=200";
         $cw_marketing_campaign = $this->send_request( $get_campaign_url, "GET", NULL );
         $cw_marketing_campaign = json_decode( $cw_marketing_campaign["body"] );
-        
+
         $default_campaing      = array(
             "label" => esc_html__( "---------------", "gravityformsconnectwise" ),
             "value" => NULL
@@ -1009,7 +1011,7 @@ class GFConnectWise extends GFFeedAddOn {
         $get_boards_url = "service/boards?pageSize=200";
         $cw_board = $this->send_request( $get_boards_url, "GET", NULL );
         $cw_board = json_decode( $cw_board["body"] );
-        
+
         $default_board      = array(
             "label" => esc_html__( "---------------", "gravityformsconnectwise" ),
             "value" => NULL
@@ -1053,7 +1055,7 @@ class GFConnectWise extends GFFeedAddOn {
             $get_subtype_url = "service/boards/" . $each_board->id . "/subtypes?pageSize=200";
             $cw_service_subtype = $this->send_request( $get_subtype_url, "GET", NULL );
             $cw_service_subtype = json_decode( $cw_service_subtype["body"] );
-            
+
             $choices = array();
             foreach ( $cw_service_subtype as $each_subtype ) {
                 $subtype = array(
@@ -1298,7 +1300,7 @@ class GFConnectWise extends GFFeedAddOn {
 
     public function send_error_notification( $response_body, $response_code, $url, $body ) {
         $to = $this->get_plugin_setting( "error_notification_emails_to" );
-        
+
         if ( empty( $to ) ) {
             $to = get_option( "admin_email" );
         }
