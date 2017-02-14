@@ -18,6 +18,9 @@ To run, test, and develop the Multisite Login Logos plugin with Docker container
 Changelog
 ----------
 
+= 1.2.8 =
+* Fix bug for create note in opportunity and strip HTML tags when map {all_fields} in initialDescription for service ticket details 
+
 = 1.2.7 =
 * Not create new contact even client fills email in case-sensitive
 

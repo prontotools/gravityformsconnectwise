@@ -354,12 +354,16 @@ class GFConnectWise extends GFFeedAddOn {
             $url = "service/tickets";
             $ticket_data = array(
                 "summary"            => GFCommon::replace_variables( $feed["meta"]["service_ticket_summary"], $form, $lead, false, false, false, "html" ),
-                "initialDescription" => GFCommon::replace_variables( $feed["meta"]["service_ticket_initial_description"], $form, $lead, false, false, false, "html" ),
                 "company"            => array(
                     "id"         => $company_id,
                     "identifier" => $identifier,
                 )
             );
+
+            $initialDescription                = GFCommon::replace_variables( $feed["meta"]["service_ticket_initial_description"], $form, $lead, false, false, false, "html" );
+            $ticket_data["initialDescription"] = strip_tags($initialDescription);
+            $ticket_data["initialDescription"] = str_replace("&nbsp;", "", $ticket_data["initialDescription"]);
+
             $ticket_board = $feed["meta"]["service_ticket_board"];
             if ( "" !=  $ticket_board ) {
                 $ticket_data["board"] = array(
