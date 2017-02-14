@@ -3,7 +3,7 @@ Contributors: prontotools, oynp
 Tags: connectwise, gravity forms, add-on, contact form, integration, psa, lead, marketing automation
 Requires at least: 4.0
 Tested up to: 4.5.1
-Stable tag: 1.2.8
+Stable tag: 1.2.9
 Copyright: © 2016 Pronto Tools
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html 
@@ -72,8 +72,11 @@ You can view a [detailed flow chart of the process here](https://pronto.bypronto
 
 == Changelog ==
 
+= 1.2.9 =
+* Fix bug for create note in opportunity
+
 = 1.2.8 =
-* Fix bug for create note in opportunity and strip HTML tags when map {all_fields} in initialDescription for service ticket details 
+* Strip HTML tags when map {all_fields} in initialDescription for service ticket details 
 
 = 1.2.7 =
 * Not create new contact even client fills email in case-sensitive

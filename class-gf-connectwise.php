@@ -288,13 +288,13 @@ class GFConnectWise extends GFFeedAddOn {
             }
 
             $url = "sales/opportunities";
-            $response = $this->send_request( $url, "POST", $opportunity_data );
+            $response             = $this->send_request( $url, "POST", $opportunity_data );
             $opportunity_response = json_decode( $response["body"] );
-            $opportunity_id = $opportunity_response->id;
+            $opportunity_id       = $opportunity_response->id;
 
             if ( "" != $feed["meta"]["opportunity_note"] ) {
-                $note  = GFCommon::replace_variables( $feed["meta"]["opportunity_note"], $form, $lead, false, false, false, "html" );
-                $opportunity_notes = strip_tags($note);
+                $note             = GFCommon::replace_variables( $feed["meta"]["opportunity_note"], $form, $lead, false, false, false, "html" );
+                $opportunity_note = strip_tags($note);
                 $opportunity_note = array(
                     "text" => $opportunity_note
                 );
@@ -302,7 +302,6 @@ class GFConnectWise extends GFFeedAddOn {
                 $url      = "sales/opportunities/{$opportunity_id}/notes";
                 $response = $this->send_request( $url, "POST", $opportunity_note);
             }
-
         }
 
         if ( "1" == $feed["meta"]["create_activity"] and "1" == $feed["meta"]["create_opportunity"] ) {
