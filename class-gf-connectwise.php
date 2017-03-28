@@ -32,6 +32,10 @@ class GFConnectWise extends GFFeedAddOn {
     }
 
     public function process_feed( $feed, $lead, $form ) {
+        $can_process_feed = $this->is_valid_settings();
+        if ( False === $can_process_feed ) {
+            return $lead;
+        }
         $this->log_debug( "# " . __METHOD__ . "(): start sending data to ConnectWise #" );
 
         $first_name    = $feed["meta"]["contact_map_fields_first_name"];

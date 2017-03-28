@@ -18,6 +18,9 @@ To run, test, and develop the Multisite Login Logos plugin with Docker container
 Changelog
 ----------
 
+= 1.2.10 =
+* Do not process feed when settings are invalid
+
 = 1.2.9 =
 * Fix bug for create note in opportunity
 
