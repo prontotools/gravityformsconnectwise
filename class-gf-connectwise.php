@@ -1362,7 +1362,7 @@ class GFConnectWise extends GFFeedAddOn {
             "method"  => $request_method,
             "body"    => $body,
             "headers" => array(
-                "Accept"           => "application/vnd.connectwise.com+json; version=v2015_3",
+                "Accept"           => "application/vnd.connectwise.com+json;",
                 "Content-type"     => "application/json" ,
                 "Authorization"    => "Basic " . base64_encode( $company_id . "+" . $public_key  . ":" . $private_key ),
                 "X-cw-overridessl" => "True"
