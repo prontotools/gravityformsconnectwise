@@ -2951,6 +2951,7 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
                 "identifier" => "Admin1",
             ),
             "expectedCloseDate" => $expectedCloseDate . "T00:00:00Z",
+            "notes"             => "test note",
         );
 
         $contact_data = array(
@@ -3090,6 +3091,7 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
             "type"              => array(
                 "id" => "1"
             ),
+            "notes"             => "test note",
         );
 
         $contact_data = array(
@@ -3468,6 +3470,7 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
             "campaign"          => array(
                 "id" => "1",
             ),
+            "notes"             => "test note",
         );
 
         $note_data = array(
