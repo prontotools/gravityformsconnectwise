@@ -18,6 +18,9 @@ To run, test, and develop the Multisite Login Logos plugin with Docker container
 Changelog
 ----------
 
+= 1.2.12 =
+* Update opportunity notes API
+
 = 1.2.11 =
 * Remove Accept version from headers
 

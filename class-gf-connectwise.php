@@ -290,6 +290,11 @@ class GFConnectWise extends GFFeedAddOn {
             if ( "" != $feed["meta"]["opportunity_source"] ) {
                 $opportunity_data["source"] = $feed["meta"]["opportunity_source"];
             }
+            if ( "" != $feed["meta"]["opportunity_note"] ) {
+                $note                      = GFCommon::replace_variables( $feed["meta"]["opportunity_note"], $form, $lead, false, false, false, "html" );
+                $opportunity_note          = strip_tags($note);
+                $opportunity_data["notes"] = $opportunity_note;
+            }
 
             $url = "sales/opportunities";
             $response             = $this->send_request( $url, "POST", $opportunity_data );
@@ -415,7 +420,7 @@ class GFConnectWise extends GFFeedAddOn {
 
     public function get_existing_contact( $firstname, $email ) {
         $contact_url  = "company/contacts?conditions=firstname='{$firstname}'";
-        $response     = $this->send_request( $contact_url, "GET", NULL );
+        $response     = $this->send_request( $contact_url, "GET", NULL, $error_notification = false );
         $contact_list = json_decode( $response["body"]);
         $this->log_debug( __METHOD__ . "(): Number of contacts with matching firstname => " . print_r( count($contact_list), true ) );
 
@@ -431,7 +436,7 @@ class GFConnectWise extends GFFeedAddOn {
             else {
                 $contact_id          = $contact->id;
                 $url                 = "company/contacts/{$contact_id}/communications";
-                $response            = $this->send_request( $url, "GET", NULL );
+                $response            = $this->send_request( $url, "GET", NULL, $error_notification = false );
                 $communication_items = json_decode( $response["body"] );
                 foreach ( $communication_items as $item ) {
                     if ( $email == $item->value and "Email" == $item->communicationType ) {
