@@ -3470,7 +3470,7 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
             "campaign"          => array(
                 "id" => "1",
             ),
-            "notes"             => "test note",
+            "notes"             => "Opportunity Note",
         );
 
         $note_data = array(
