@@ -142,7 +142,7 @@ class GFConnectWise extends GFFeedAddOn {
 
             $get_company_url = "company/companies?conditions=identifier='{$identifier}'";
             $response        = $this->send_request( $get_company_url, "GET", NULL );
-            $exist_company    = json_decode( $response["body"]);
+            $exist_company   = json_decode( $response["body"]);
 
             if ( empty( $exist_company ) ) {
                 $is_company_created = true;
@@ -232,7 +232,7 @@ class GFConnectWise extends GFFeedAddOn {
         }
 
         if ( $is_company_created ) {
-            if ( "Catchall" != $identifier ){
+            if ( "Catchall" != $identifier ) {
                 $company_url = "company/companies/{$company_id}";
                 $company_update_data = array(
                     array(
@@ -304,9 +304,9 @@ class GFConnectWise extends GFFeedAddOn {
             }
             if ( "" != $feed["meta"]["opportunity_note"] ) {
                 $note                      = GFCommon::replace_variables( $feed["meta"]["opportunity_note"], $form, $lead, false, false, false, "html" );
-                $opportunity_note          = strip_tags($note);
-                $opportunity_note          = html_entity_decode($opportunity_note, ENT_QUOTES);
-                $opportunity_note          = preg_replace('/\s+/S', " ", $opportunity_note);
+                $opportunity_note          = strip_tags( $note );
+                $opportunity_note          = html_entity_decode( $opportunity_note, ENT_QUOTES );
+                $opportunity_note          = preg_replace( '/\s+/S', " ", $opportunity_note );
                 $opportunity_data["notes"] = $opportunity_note;
             }
 
