@@ -941,7 +941,7 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
             "addressLine1" => "-",
             "addressLine2" => "-",
             "city"         => "-",
-            "state"        => "-",
+            "state"        => "CA",
             "zip"          => "-",
             "phoneNumber"  => NULL,
             "faxNumber"    => NULL,
@@ -1433,7 +1433,7 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
             "addressLine1" => "-",
             "addressLine2" => "-",
             "city"         => "-",
-            "state"        => "-",
+            "state"        => "CA",
             "zip"          => "-",
             "phoneNumber"  => NULL,
             "faxNumber"    => NULL,
@@ -1696,7 +1696,7 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
             "addressLine1" => "-",
             "addressLine2" => "-",
             "city"         => "-",
-            "state"        => "-",
+            "state"        => "CA",
             "zip"          => "-",
             "phoneNumber"  => NULL,
             "faxNumber"    => NULL,
@@ -1805,7 +1805,7 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
             "addressLine1" => "-",
             "addressLine2" => "-",
             "city"         => "-",
-            "state"        => "-",
+            "state"        => "CA",
             "zip"          => "-",
             "phoneNumber"  => null,
             "faxNumber"    => null,
@@ -1872,7 +1872,125 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
 
         $GF_ConnectWise->process_feed( $feed, $lead, NULL );
     }
+    
+    function test_submit_existing_contact_with_new_company_should_not_update_to_be_primary_contact() {
+		$feed = array(
+			"id"        => "1",
+			"form_id"   => "1",
+			"is_active" => "1",
+			"meta"      => array(
+				"contact_map_fields_first_name" => "2.3",
+				"contact_map_fields_last_name"  => "2.6",
+				"contact_map_fields_email"      => "3",
+				"contact_type"                  => "1",
+				"contact_department"            => "2",
+				"company_type"                  => "1",
+				"company_status"                => "1",
+				"company_map_fields"            => array(
+					array(
+						"key"        => "company",
+						"value"      => "2",
+						"custom_key" => ""
+					)
+				)
+			)
+		);
 
+		$lead = array(
+			"2.3" => "Test Firstname",
+			"2.6" => "Test Lastname",
+			"3"   => "test@test.com",
+			"2"   => "New Company",
+			"2.2" => "",
+			"2.4" => "",
+			"2.8" => ""
+		);
+
+		$comunication_types = array(
+			"value"             => "test@test.com",
+			"communicationType" => "Email",
+			"type"              => array(
+				"id"   => 1,
+				"name" => "Email"
+			),
+			"defaultFlag"       => true
+		);
+
+		$contact_data = array(
+			"firstName"          => "Test Firstname",
+			"lastName"           => "Test Lastname",
+			"company"            => array(
+				"identifier" => "TestCompany",
+			),
+			"department"         => array(
+				"id"         => "1"
+			),
+			"communicationItems" => $communication_types
+		);
+
+		$GF_ConnectWise = $this->getMockBuilder( "GFConnectWise" )
+			->setMethods( array( "send_request", "get_existing_contact", "is_valid_settings" ) )
+			->getMock();
+
+		$GF_ConnectWise->expects( $this->exactly( 1 ) )
+			->method( "is_valid_settings" )
+			->willReturn( true );
+
+		$mock_contact_data = '{"id": "1", "firstName": "FirstName", "communicationItems": [{"communicationType": "Email", "value": "test@test.com"}], "company": {"identifier": "TestCompany"}}';
+		$mock_contact_response = json_decode( $mock_contact_data );
+
+		$mock_company_response = array(
+			"body" => '[{"id": "1"}]'
+		);
+
+		$company_data = array(
+			"id"           => 0,
+			"identifier"   => "NewCompany",
+			"name"         => "New Company",
+			"addressLine1" => "-",
+			"addressLine2" => "-",
+			"city"         => "-",
+			"state"        => "CA",
+			"zip"          => "-",
+			"phoneNumber"  => NULL,
+			"faxNumber"    => NULL,
+			"website"      => NULL,
+			"type"         => array(
+				"id" => "1"
+			),
+			"status"       => array(
+				"id" => "1"
+			)
+		);
+
+		$GF_ConnectWise->expects( $this->at( 1 ) )
+			->method( "get_existing_contact" )
+			->will( $this->returnValue( $mock_contact_response ) );
+
+		$GF_ConnectWise->expects( $this->at( 2 ) )
+			->method( "send_request" )
+			->with(
+				"company/companies?conditions=identifier='NewCompany'",
+				"GET",
+				NULL
+			)
+			->will( $this->returnValue( array() ) );
+
+		$GF_ConnectWise->expects( $this->at( 3 ) )
+			->method( "send_request" )
+			->with(
+				"company/companies?conditions=identifier='TestCompany'",
+				"GET",
+				NULL
+			)
+			->will( $this->returnValue( $mock_company_response ) );
+
+		$GF_ConnectWise->expects( $this->exactly( 2 ) )
+			->method( "send_request" );
+
+		$GF_ConnectWise->process_feed( $feed, $lead, NULL );
+    }
+    
     function test_process_feed_without_company_data_should_create_contact_to_catchall() {
         $feed = array(
             "id" => "1",
@@ -2192,7 +2310,7 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
             "addressLine1" => "-",
             "addressLine2" => "-",
             "city"         => "-",
-            "state"        => "-",
+            "state"        => "CA",
             "zip"          => "-",
             "phoneNumber"  => NULL,
             "faxNumber"    => NULL,
@@ -2300,7 +2418,7 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
             "addressLine1" => "-",
             "addressLine2" => "-",
             "city"         => "-",
-            "state"        => "-",
+            "state"        => "CA",
             "zip"          => "-",
             "phoneNumber"  => NULL,
             "faxNumber"    => NULL,
@@ -2460,7 +2578,7 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
             "addressLine1" => "-",
             "addressLine2" => "-",
             "city"         => "-",
-            "state"        => "-",
+            "state"        => "CA",
             "zip"          => "-",
             "phoneNumber"  => NULL,
             "faxNumber"    => NULL,
@@ -3505,7 +3623,7 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
             "addressLine1" => "-",
             "addressLine2" => "-",
             "city"         => "-",
-            "state"        => "-",
+            "state"        => "CA",
             "zip"          => "-",
             "phoneNumber"  => NULL,
             "faxNumber"    => NULL,
@@ -3728,7 +3846,7 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
             "addressLine1" => "-",
             "addressLine2" => "-",
             "city"         => "-",
-            "state"        => "-",
+            "state"        => "CA",
             "zip"          => "-",
             "phoneNumber"  => NULL,
             "faxNumber"    => NULL,
@@ -3971,7 +4089,7 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
             "addressLine1" => "-",
             "addressLine2" => "-",
             "city"         => "-",
-            "state"        => "-",
+            "state"        => "CA",
             "zip"          => "-",
             "phoneNumber"  => NULL,
             "faxNumber"    => NULL,
@@ -4429,7 +4547,7 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
         $pronto_ads_js = array(
             "handle"    => "pronto_ads_js",
             "src"       => "http://example.org/wp-content/plugins/connectwise-forms-integration/js/pronto-ads.js",
-            "version"   => "1.1",
+            "version"   => "1.3.0",
             "deps"      => array( "jquery" ),
             "enqueue"   =>
                 array(
@@ -4448,9 +4566,9 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
         $pronto_ads_js = array(
             "handle"    => "pronto_ads_js",
             "src"       => "http://example.org/wp-content/plugins/connectwise-forms-integration/js/pronto-ads.js",
-            "version"   => "1.1",
+            "version"   => "1.4.0",
             "deps"      => array( "jquery" ),
-            "strings" => array(
+            "strings"   => array(
                 "path" => 'http://example.org/wp-content/plugins/connectwise-forms-integration/images/connectwise-banner.jpg'
             ),
             "enqueue"   =>

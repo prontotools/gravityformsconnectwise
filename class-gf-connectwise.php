@@ -3,10 +3,11 @@
 GFForms::include_feed_addon_framework();
 
 class GFConnectWise extends GFFeedAddOn {
+    protected $_async_feed_processing    = true;
     protected $_title                    = "Gravity Forms ConnectWise Add-On";
     protected $_short_title              = "ConnectWise";
-    protected $_version                  = "1.1";
-    protected $_min_gravityforms_version = "1.9.16";
+    protected $_version                  = "1.4.0";
+    protected $_min_gravityforms_version = "2.0";
     protected $_slug                     = "connectwise";
     protected $_path                     = "connectwise-forms-integration/gravityformsconnectwise.php";
     protected $_full_path                = __FILE__;
@@ -104,7 +105,7 @@ class GFConnectWise extends GFFeedAddOn {
                 $city = "-";
             }
             if ( NULL == $state or "" == $state ) {
-                $state = "-";
+                $state = "CA";
             }
             if ( NULL == $zip or "" == $zip ) {
                 $zip = "-";
@@ -144,7 +145,7 @@ class GFConnectWise extends GFFeedAddOn {
             $response        = $this->send_request( $get_company_url, "GET", NULL );
             $exist_company   = json_decode( $response["body"]);
 
-            if ( empty( $exist_company ) ) {
+            if ( empty( $exist_company ) and empty( $contact_data ) ) {
                 $is_company_created = true;
             } else {
                 $is_company_created = false;

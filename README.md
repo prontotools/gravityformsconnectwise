@@ -18,6 +18,12 @@ To run, test, and develop the Multisite Login Logos plugin with Docker container
 Changelog
 ----------
 
+= 1.4.0 =
+* Change default state of company to `CA`
+
+= 1.3.0 =
+* Enable async feed processing. Feed processing is delayed until after the confirmation has been displayed instead of occurring just after the entry is saved.
+
 = 1.2.13 =
 * Fix every submission always change primary contact for company
 
