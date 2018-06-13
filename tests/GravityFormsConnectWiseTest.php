@@ -1872,7 +1872,7 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
 
         $GF_ConnectWise->process_feed( $feed, $lead, NULL );
     }
-    
+
     function test_submit_existing_contact_with_new_company_should_not_update_to_be_primary_contact() {
 		$feed = array(
 			"id"        => "1",
@@ -1990,7 +1990,7 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
 
 		$GF_ConnectWise->process_feed( $feed, $lead, NULL );
     }
-    
+
     function test_process_feed_without_company_data_should_create_contact_to_catchall() {
         $feed = array(
             "id" => "1",
@@ -2151,7 +2151,7 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
         $note_data = array(
             "text" => "Please call this contact"
         );
-        
+
         $GF_ConnectWise = $this->getMockBuilder( "GFConnectWise" )
             ->setMethods( array( "send_request", "get_existing_contact", "is_valid_settings" ) )
             ->getMock();
@@ -3424,7 +3424,7 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
             "addressLine1" => "-",
             "addressLine2" => "-",
             "city"         => "-",
-            "state"        => "-",
+            "state"        => "CA",
             "zip"          => "-",
             "phoneNumber"  => NULL,
             "faxNumber"    => NULL,
@@ -4195,7 +4195,7 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
         $GF_ConnectWise->expects( $this->at( 1 ) )
             ->method( "get_existing_contact" )
             ->will( $this->returnValue( false ) );
-        
+
         $GF_ConnectWise->expects( $this->at( 2 ) )
             ->method( "send_request" )
             ->with(
