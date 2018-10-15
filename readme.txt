@@ -3,10 +3,10 @@ Contributors: prontotools, oynp
 Tags: connectwise, gravity forms, add-on, contact form, integration, psa, lead, marketing automation
 Requires at least: 4.0
 Tested up to: 4.9.6
-Stable tag: 1.4.0
+Stable tag: 1.4.1
 Copyright: © 2016 Pronto Tools
 License: GNU General Public License v3.0
-License URI: http://www.gnu.org/licenses/gpl-3.0.html 
+License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
 Integrates Gravity Forms with ConnectWise, allowing form submissions to be automatically sent to your ConnectWise account.
 
@@ -50,9 +50,9 @@ It’s best to troubleshoot this in error logs. To do this, [download the Gravit
 
 Once installed, activate at Forms > Settings > Logging, then select “Log all messages” for Gravity Forms ConnectWise Add-On.
 
-Submit your problem form again, then refresh the logging page. Click “view log” to review the log for all recent submissions. You can search the page for “400” to quickly find the errors. 
+Submit your problem form again, then refresh the logging page. Click “view log” to review the log for all recent submissions. You can search the page for “400” to quickly find the errors.
 
-Just above the response code you should find a message with the explanation of the error. 
+Just above the response code you should find a message with the explanation of the error.
 
 = How do the Contact and Company lookups work? =
 
@@ -66,11 +66,14 @@ You can view a [detailed flow chart of the process here](https://pronto.bypronto
 
 1. Enter your account’s credentials to authenticate. When successful you’ll see green checkmarks.
 2. Access the forms settings and navigate to ConnectWise.
-3. Click “Add New” feed. 
+3. Click “Add New” feed.
 4. Configure your feed settings. First Name, Last Name and Email are required for the integration to work. Company must be set if you want new companies to be created.
 5. Enable conditional logic to have a feed send data only for specific events.
 
 == Changelog ==
+
+= 1.4.1 =
+* Remove unused CSS `display: table;`
 
 = 1.4.0 =
 * Change default state of company to `CA`
@@ -97,34 +100,34 @@ You can view a [detailed flow chart of the process here](https://pronto.bypronto
 * Fix bug for create note in opportunity
 
 = 1.2.8 =
-* Strip HTML tags when map {all_fields} in initialDescription for service ticket details 
+* Strip HTML tags when map {all_fields} in initialDescription for service ticket details
 
 = 1.2.7 =
 * Not create new contact even client fills email in case-sensitive
 
 = 1.2.6 =
-* Extend timeout when request to get data from ConnectWise API 
+* Extend timeout when request to get data from ConnectWise API
 
 = 1.2.5 =
-* Fix bug for send error email notification 
+* Fix bug for send error email notification
 
 = 1.2.4 =
-* Improve error email notification, should not send when have error about duplicate company ID  
+* Improve error email notification, should not send when have error about duplicate company ID
 
 = 1.2.3 =
-* Match contact and email before create company 
+* Match contact and email before create company
 
 = 1.2.2 =
 * Create Note in Contact and Company
 
 = 1.2.1 =
 
-* Add company_id when create new activity and new service ticket for version 2017_1 
+* Add company_id when create new activity and new service ticket for version 2017_1
 
 = 1.2.0 =
 
-* Add company_id when create new opportunity for version 2017_1 
-* Strip HTML tags when add note to ConnectWise 
+* Add company_id when create new opportunity for version 2017_1
+* Strip HTML tags when add note to ConnectWise
 
 = 1.1.4 =
 
