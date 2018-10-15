@@ -10,13 +10,16 @@ To run, test, and develop the Multisite Login Logos plugin with Docker container
 1. Build the container:
 
   `$ docker build -t wptest .`
- 
+
 2. Test running the PHPUnit on this plugin:
 
   `$ docker run -it -v $(pwd):/app wptest /bin/bash -c "service mysql start && phpunit"`
 
 Changelog
 ----------
+
+= 1.4.1 =
+* Remove unused CSS `display: table;`
 
 = 1.4.0 =
 * Change default state of company to `CA`
@@ -40,34 +43,34 @@ Changelog
 * Fix bug for create note in opportunity
 
 = 1.2.8 =
-* Strip HTML tags when map {all_fields} in initialDescription for service ticket details 
+* Strip HTML tags when map {all_fields} in initialDescription for service ticket details
 
 = 1.2.7 =
 * Not create new contact even client fills email in case-sensitive
 
 = 1.2.6 =
-* Extend timeout when request to get data from ConnectWise API 
+* Extend timeout when request to get data from ConnectWise API
 
 = 1.2.5 =
-* Fix bug for send error email notification 
+* Fix bug for send error email notification
 
 = 1.2.4 =
-* Improve error email notification, should not send when have error about duplicate company ID  
+* Improve error email notification, should not send when have error about duplicate company ID
 
 = 1.2.3 =
-* Match contact and email before create company 
+* Match contact and email before create company
 
 = 1.2.2 =
 * Create Note in Contact and Company
 
 = 1.2.1 =
 
-* Add company_id when create new activity and new service ticket for version 2017_1 
+* Add company_id when create new activity and new service ticket for version 2017_1
 
 = 1.2.0 =
 
-* Add company_id when create new opportunity for version 2017_1 
-* Strip HTML tags when add note to ConnectWise 
+* Add company_id when create new opportunity for version 2017_1
+* Strip HTML tags when add note to ConnectWise
 
 = 1.1.4 =
 
@@ -83,7 +86,7 @@ Changelog
 
 = 1.1.1 =
 
-* Retry with DefaultContact when DefaultContactId fail 
+* Retry with DefaultContact when DefaultContactId fail
 
 = 1.1.0 =
 

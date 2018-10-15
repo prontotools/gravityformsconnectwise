@@ -6,7 +6,7 @@ class GFConnectWise extends GFFeedAddOn {
     protected $_async_feed_processing    = true;
     protected $_title                    = "Gravity Forms ConnectWise Add-On";
     protected $_short_title              = "ConnectWise";
-    protected $_version                  = "1.4.0";
+    protected $_version                  = "1.4.1";
     protected $_min_gravityforms_version = "2.0";
     protected $_slug                     = "connectwise";
     protected $_path                     = "connectwise-forms-integration/gravityformsconnectwise.php";
