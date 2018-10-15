@@ -2,7 +2,7 @@
 #gaddon-setting-row-company_map_fields .repeater th {
     padding-top: 0;
 }
-#gform_tab_group { display: table; width: 100%; }
+#gform_tab_group { width: 100%; }
 #tab_connectwise, #sidebar_section {
 	display: table-cell;
     height: 500px;
