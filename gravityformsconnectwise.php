@@ -10,9 +10,9 @@
  * License URI: http://www.gnu.org/licenses/gpl-3.0.html
  */
 
-if ( class_exists( "GFForms" ) ) {
-	add_action( "gform_loaded", array( "GFConnectWiseBootstrap", "load" ), 5 );
-	require_once WP_PLUGIN_DIR . "/connectwise-forms-integration/class-cw-connection-version.php";
+if ( class_exists( 'GFForms' ) ) {
+	add_action( 'gform_loaded', array( 'GFConnectWiseBootstrap', 'load' ), 5 );
+	require_once WP_PLUGIN_DIR . '/connectwise-forms-integration/class-cw-connection-version.php';
 
 	class GFConnectWiseBootstrap {
 		public static function load() {
@@ -22,7 +22,7 @@ if ( class_exists( "GFForms" ) ) {
 			if ( '2018.6' < $version ) {
 				require_once( 'class-gf-connectwise-2018v6.php' );
 				GFAddOn::register( 'GFConnectWise2018v6' );
-			} elseif ( '2016.4' < $version ) {
+			} elseif ( '2016.4' <= $version ) {
 				require_once( 'class-gf-connectwise-2016v4.php' );
 				GFAddOn::register( 'GFConnectWiseV4' );
 			} else {
@@ -35,11 +35,14 @@ if ( class_exists( "GFForms" ) ) {
 	function gf_connectwise() {
 		$cw_api = new ConnectWiseApi();
 		$version = $cw_api->get_connectwise_version();
-		if ( "2016.4" <= $version ) {
-			require_once( "class-gf-connectwise-v4.php" );
+		if ( '2018.6' < $version ) {
+			require_once( 'class-gf-connectwise-2018v6.php' );
+			return GFConnectWise2018v6::get_instance();
+		} elseif ( '2016.4' <= $version ) {
+			require_once( 'class-gf-connectwise-2016v4.php' );
 			return GFConnectWiseV4::get_instance();
 		} else {
-			require_once( "class-gf-connectwise.php" );
+			require_once( 'class-gf-connectwise.php' );
 			return GFConnectWise::get_instance();
 		}
 	}
