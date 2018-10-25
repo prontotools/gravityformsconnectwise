@@ -4566,7 +4566,7 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
 		$pronto_ads_js = array(
 			"handle"    => "pronto_ads_js",
 			"src"       => "http://example.org/wp-content/plugins/connectwise-forms-integration/js/pronto-ads.js",
-			"version"   => "1.4.1",
+			"version"   => "1.5.0",
 			"deps"      => array( "jquery" ),
 			"strings"   => array(
 				"path" => 'http://example.org/wp-content/plugins/connectwise-forms-integration/images/connectwise-banner.jpg'
