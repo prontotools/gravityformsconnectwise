@@ -19,12 +19,15 @@ if ( class_exists( "GFForms" ) ) {
 			$cw_api = new ConnectWiseVersion();
 			$version = $cw_api->get();
 
-			if ( "2016.4" <= $version ) {
-				require_once( "class-gf-connectwise-v4.php" );
-				GFAddOn::register( "GFConnectWiseV4" );
+			if ( '2018.6' < $version ) {
+				require_once( 'class-gf-connectwise-2018v6.php' );
+				GFAddOn::register( 'GFConnectWise2018v6' );
+			} elseif ( '2016.4' < $version ) {
+				require_once( 'class-gf-connectwise-2016v4.php' );
+				GFAddOn::register( 'GFConnectWiseV4' );
 			} else {
-				require_once( "class-gf-connectwise.php" );
-				GFAddOn::register( "GFConnectWise" );
+				require_once( 'class-gf-connectwise.php' );
+				GFAddOn::register( 'GFConnectWise' );
 			}
 		}
 	}
