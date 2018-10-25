@@ -4676,4 +4676,87 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
         $expected .= "https://www.gravityhelp.com/documentation/article/logging-add-on/";
         $this->assertContains( $expected, $mailer->mock_sent[0]["body"] );
     }
+
+    function test_get_prepare_company_data() {
+		$data_to_prepare = array(
+			'identifier'     => 'TestCompany',
+			'company'        => 'Test Company',
+			'address_line1'  => '-',
+			'address_line2'  => '-',
+			'city'           => '-',
+			'state'          => 'CA',
+			'zip'            => '-',
+			'phone_number'   => NULL,
+			'fax_number'     => NULL,
+			'web_site'       => NULL,
+			'company_type'   => array(
+				'1'
+			),
+			'company_status' => array(
+				'1'
+			),
+		);
+
+		$GF_ConnectWise = $this->getMockBuilder( 'GFConnectWise' )
+			->setMethods( array( 'send_request' ) )
+			->getMock();
+
+
+		$actual = $GF_ConnectWise->prepare_company_data( $data_to_prepare );
+
+		$expect = array(
+			'id'           => 0,
+			'identifier'   => 'TestCompany',
+			'name'         => 'Test Company',
+			'addressLine1' => '-',
+			'addressLine2' => '-',
+			'city'         => '-',
+			'state'        => 'CA',
+			'zip'          => '-',
+			'phoneNumber'  => NULL,
+			'faxNumber'    => NULL,
+			'website'      => NULL,
+			'type'        => array(
+				'id' => array(
+					'1'
+				)
+			),
+			'status'       => array(
+				'id' => array(
+					'1'
+				)
+			),
+		);
+
+		$this->assertEquals( $actual, $expect );
+	}
+
+	function tests_get_prepare_contact_data() {
+		$data_to_prepare = array(
+			'first_name'   => 'Test Firstname',
+			'last_name'    => 'Test Lastname',
+			'identifier'   => 'TestCompany',
+			'contact_type' => '1',
+		);
+
+		$GF_ConnectWise = $this->getMockBuilder( 'GFConnectWise' )
+			->setMethods( array( 'send_request' ) )
+			->getMock();
+
+
+		$actual = $GF_ConnectWise->prepare_contact_data( $data_to_prepare );
+
+		$expect = array(
+			'firstName' => 'Test Firstname',
+			'lastName'  => 'Test Lastname',
+			'company'   => array(
+				'identifier' => 'TestCompany'
+			),
+			'type'      => array(
+				'id' => '1'
+			)
+		);
+
+		$this->assertEquals( $actual, $expect );
+	}
 }
