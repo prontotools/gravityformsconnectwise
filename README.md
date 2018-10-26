@@ -19,8 +19,7 @@ Changelog
 ----------
 
 = 1.5.0 =
-* Upgrade ConnectWise API to version 2018_6.
-* Add version control.
+* Support ConnectWise API version 2018.6.
 
 = 1.4.1 =
 * Remove unused CSS `display: table;`
