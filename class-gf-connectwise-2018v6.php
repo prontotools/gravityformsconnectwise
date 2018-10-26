@@ -7,7 +7,7 @@ class GFConnectWise2018v6 extends GFConnectWise {
 	private static $_instance = null;
 
 	public static function get_instance() {
-		if ( self::$_instance == null ) {
+		if ( null == self::$_instance ) {
 			self::$_instance = new self;
 		}
 
@@ -17,11 +17,10 @@ class GFConnectWise2018v6 extends GFConnectWise {
 	public function get_team_members() {
 		$this->log_debug( __METHOD__ . '(): start getting team members from ConnectWise' );
 
-		$team_members_list = array();
-
+		$team_members_list    = array();
 		$get_team_members_url = 'system/members?pageSize=200';
-		$cw_team_members = $this->send_request( $get_team_members_url, 'GET', NULL );
-		$cw_team_members = json_decode( $cw_team_members['body'] );
+		$cw_team_members      = $this->send_request( $get_team_members_url, 'GET', NULL );
+		$cw_team_members      = json_decode( $cw_team_members['body'] );
 
 		foreach ( $cw_team_members as $each_member ) {
 			$member = array(
@@ -74,5 +73,4 @@ class GFConnectWise2018v6 extends GFConnectWise {
 
 		return $contact_data;
 	}
-
 }
