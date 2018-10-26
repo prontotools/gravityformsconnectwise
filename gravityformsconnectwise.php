@@ -16,7 +16,7 @@ if ( class_exists( 'GFForms' ) ) {
 
 	class GFConnectWiseBootstrap {
 		public static function load() {
-			$cw_api = new ConnectWiseVersion();
+			$cw_api  = new ConnectWiseVersion();
 			$version = $cw_api->get();
 
 			if ( '2018.6' < $version ) {
@@ -33,7 +33,7 @@ if ( class_exists( 'GFForms' ) ) {
 	}
 
 	function gf_connectwise() {
-		$cw_api = new ConnectWiseApi();
+		$cw_api  = new ConnectWiseApi();
 		$version = $cw_api->get_connectwise_version();
 		if ( '2018.6' < $version ) {
 			require_once( 'class-gf-connectwise-2018v6.php' );
