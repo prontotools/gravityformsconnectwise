@@ -18,6 +18,9 @@ To run, test, and develop the Multisite Login Logos plugin with Docker container
 Changelog
 ----------
 
+= 1.5.0 =
+* Support ConnectWise API version 2018.6.
+
 = 1.4.1 =
 * Remove unused CSS `display: table;`
 

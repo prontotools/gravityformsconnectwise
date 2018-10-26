@@ -6,7 +6,7 @@ class GFConnectWise extends GFFeedAddOn {
     protected $_async_feed_processing    = true;
     protected $_title                    = "Gravity Forms ConnectWise Add-On";
     protected $_short_title              = "ConnectWise";
-    protected $_version                  = "1.4.1";
+    protected $_version                  = "1.5.0";
     protected $_min_gravityforms_version = "2.0";
     protected $_slug                     = "connectwise";
     protected $_path                     = "connectwise-forms-integration/gravityformsconnectwise.php";
@@ -15,7 +15,7 @@ class GFConnectWise extends GFFeedAddOn {
 
 
     public static function get_instance() {
-        if ( self::$_instance == null ) {
+        if ( null == self::$_instance ) {
             self::$_instance = new self;
         }
 
@@ -32,9 +32,48 @@ class GFConnectWise extends GFFeedAddOn {
         return esc_html__( "ConnectWise Field", "gravityformsconnectwise" );
     }
 
+    public function prepare_company_data( $data_to_prepare ) {
+		$company_data = array(
+			'id'           => 0,
+			'identifier'   => $data_to_prepare['identifier'],
+			'name'         => $data_to_prepare['company'],
+			'addressLine1' => $data_to_prepare['address_line1'],
+			'addressLine2' => $data_to_prepare['address_line2'],
+			'city'         => $data_to_prepare['city'],
+			'state'        => $data_to_prepare['state'],
+			'zip'          => $data_to_prepare['zip'],
+			'phoneNumber'  => $data_to_prepare['phone_number'],
+			'faxNumber'    => $data_to_prepare['fax_number'],
+			'website'      => $data_to_prepare['web_site'],
+			'type'         => array(
+				'id' => $data_to_prepare['company_type'],
+			),
+			'status'       => array(
+				'id' => $data_to_prepare['company_status'],
+			)
+		);
+
+		return $company_data;
+	}
+
+	public function prepare_contact_data( $data_to_prepare ) {
+		$contact_data = array(
+			'firstName' => $data_to_prepare['first_name'],
+			'lastName'  => $data_to_prepare['last_name'],
+			'company'   => array(
+				'identifier' => $data_to_prepare['identifier'],
+			),
+			'type'      => array(
+				'id' => $data_to_prepare['contact_type'],
+			)
+		);
+
+		return $contact_data;
+	}
+
     public function process_feed( $feed, $lead, $form ) {
         $can_process_feed = $this->is_valid_settings();
-        if ( False === $can_process_feed ) {
+        if ( false === $can_process_feed ) {
             return $lead;
         }
         $this->log_debug( "# " . __METHOD__ . "(): start sending data to ConnectWise #" );
@@ -117,25 +156,22 @@ class GFConnectWise extends GFFeedAddOn {
             $company_type   = $feed["meta"]["company_type"];
             $company_status = $feed["meta"]["company_status"];
 
-            $company_data = array(
-                "id"           => 0,
-                "identifier"   => $identifier,
-                "name"         => $company,
-                "addressLine1" => $address_line1,
-                "addressLine2" => $address_line2,
-                "city"         => $city,
-                "state"        => $state,
-                "zip"          => $zip,
-                "phoneNumber"  => $phone_number,
-                "faxNumber"    => $fax_number,
-                "website"      => $web_site,
-                "type"         => array(
-                    "id" => $company_type,
-                ),
-                "status"       => array(
-                    "id" => $company_status,
-                )
-            );
+            $data_to_prepare = array(
+				'identifier'     => $identifier,
+				'company'        => $company,
+				'address_line1'  => $address_line1,
+				'address_line2'  => $address_line2,
+				'city'           => $city,
+				'state'          => $state,
+				'zip'            => $zip,
+				'phone_number'   => $phone_number,
+				'fax_number'     => $fax_number,
+				'web_site'       => $web_site,
+				'company_type'   => $company_type,
+				'company_status' => $company_status,
+			);
+
+			$company_data = $this->prepare_company_data( $data_to_prepare );
 
             if ( "1" == $feed["meta"]["company_as_lead"] ) {
                 $company_data["leadFlag"] = true;
@@ -167,16 +203,14 @@ class GFConnectWise extends GFFeedAddOn {
         }
 
         if ( !$contact_data ) {
-            $contact_data = array(
-                "firstName" => $lead[ $first_name ],
-                "lastName"  => $lead[ $last_name ],
-                "company"   => array(
-                    "identifier" => $identifier,
-                ),
-                "type" => array(
-                    "id" => $contact_type
-                )
-            );
+            $data_to_prepare = array(
+				'first_name'   => $lead[ $first_name ],
+				'last_name'    => $lead[ $last_name ],
+				'identifier'   => $identifier,
+				'contact_type' => $contact_type,
+			);
+
+			$contact_data = $this->prepare_contact_data( $data_to_prepare );
 
             if ( "---------------" != $department ) {
                 $contact_data["department"] = array(
