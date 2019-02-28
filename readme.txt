@@ -72,6 +72,9 @@ You can view a [detailed flow chart of the process here](https://pronto.bypronto
 
 == Changelog ==
 
+= 1.5.1 =
+* Escape special characters when send data to ConnectWise.
+
 = 1.5.0 =
 * Support ConnectWise API version 2018.6.
 
