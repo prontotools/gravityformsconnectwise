@@ -4566,7 +4566,7 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
 		$pronto_ads_js = array(
 			"handle"    => "pronto_ads_js",
 			"src"       => "http://example.org/wp-content/plugins/connectwise-forms-integration/js/pronto-ads.js",
-			"version"   => "1.5.0",
+			"version"   => "1.5.1",
 			"deps"      => array( "jquery" ),
 			"strings"   => array(
 				"path" => 'http://example.org/wp-content/plugins/connectwise-forms-integration/images/connectwise-banner.jpg'
@@ -4758,5 +4758,577 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
 		);
 
 		$this->assertEquals( $actual, $expect );
+	}
+
+	function test_sent_opportunity_summary_field_should_escape_special_character() {
+		$feed = array (
+			"id"        => "1",
+			"form_id"   => "1",
+			"is_active" => "1",
+			"meta"      => array(
+				"contact_map_fields_first_name" => "2.3",
+				"contact_map_fields_last_name"  => "2.6",
+				"contact_map_fields_email"      => "3",
+				"create_opportunity"            => "1",
+				"opportunity_name"              => "Can&#039;t translate",
+				"company_map_fields"            => array(),
+			)
+		);
+
+		$lead = array(
+			"2.3" => "Alita",
+			"2.6" => "Fobs",
+			"3"   => "alita@gmail.com",
+		);
+
+		$expectedCloseDate = mktime( 0, 0, 0, date( "m" ), date( "d" ) + 30, date( "y" ) );
+		$expectedCloseDate = date( "Y-m-d", $expectedCloseDate );
+
+		$opportunity_data = array(
+			"name"              => "Can't translate",
+			"primarySalesRep"   => array(
+				"identifier"    => "",
+			),
+			"expectedCloseDate" => $expectedCloseDate . "T00:00:00Z",
+			"company"           => array(
+				"id"         => "",
+				"identifier" => "Catchall"
+			),
+			"contact"           => array(
+				"id"   => "",
+				"name" => " "
+			),
+			"site"              => array(
+				"id"   => "",
+				"name" => ""
+			),
+			"type"              => array( "id" => "" ),
+			"campaign"          => array( "id" => "" )
+		);
+
+		$mock_opportunity_data = '{"id":1,"name":"Can\'t translate"}';
+		$mock_opportunity_response = array(
+			"body" => $mock_opportunity_data
+		);
+
+		$GF_ConnectWise = $this->getMockBuilder( "GFConnectWise" )
+			->setMethods( array( "send_request", "get_existing_contact", "is_valid_settings" ) )
+			->getMock();
+
+		$GF_ConnectWise->expects( $this->at( 6 ) )
+			->method( "send_request" )
+			->with(
+				"sales/opportunities",
+				"POST",
+				$opportunity_data
+			)
+			->will( $this->returnValue( $mock_opportunity_response ) );
+
+		$GF_ConnectWise->process_feed( $feed, $lead, array() );
+	}
+
+	function test_sent_opportunity_note_field_should_escape_special_character() {
+		$feed = array (
+			"id"        => "1",
+			"form_id"   => "1",
+			"is_active" => "1",
+			"meta"      => array(
+				"contact_map_fields_first_name" => "2.3",
+				"contact_map_fields_last_name"  => "2.6",
+				"contact_map_fields_email"      => "3",
+				"create_opportunity"            => "1",
+				"opportunity_name"              => "Can translate",
+				"opportunity_note"              => "Opportunity Note Can&#039;t have special",
+				"company_map_fields"            => array(),
+
+			)
+		);
+
+		$lead = array(
+			"2.3" => "Alita",
+			"2.6" => "Fobs",
+			"3"   => "alita@gmail.com",
+		);
+
+		$expectedCloseDate = mktime( 0, 0, 0, date( "m" ), date( "d" ) + 30, date( "y" ) );
+		$expectedCloseDate = date( "Y-m-d", $expectedCloseDate );
+
+		$opportunity_data = array(
+			"name"              => "Can translate",
+			"primarySalesRep"   => array(
+				"identifier" => "",
+			),
+			"expectedCloseDate" => $expectedCloseDate . "T00:00:00Z",
+			"company"           => array(
+				"id"         => "",
+				"identifier" => "Catchall"
+			),
+			"contact"           => array(
+				"id"   => "",
+				"name" => " "
+			),
+			"site"              => array(
+				"id"   => "",
+				"name" => ""
+			),
+			"type"              => array( "id" => "" ),
+			"campaign"          => array( "id" => "" ),
+			"notes"             => "Opportunity Note Can't have special"
+		);
+
+		$note_data = array(
+			"text" => "Opportunity Note Can't have special"
+		);
+
+
+		$mock_opportunity_data     = '{
+			"id":1,
+			"name":"Can translate",
+			"notes":"Opportunity Note Can\'t have special"
+		}';
+		$mock_opportunity_response = array(
+			"body" => $mock_opportunity_data
+		);
+
+		$GF_ConnectWise = $this->getMockBuilder( "GFConnectWise" )
+			->setMethods( array( "send_request", "get_existing_contact", "is_valid_settings" ) )
+			->getMock();
+
+		$GF_ConnectWise->expects( $this->at( 6 ) )
+			->method( "send_request" )
+			->with(
+				"sales/opportunities",
+				"POST",
+				$opportunity_data
+			)
+			->will( $this->returnValue( $mock_opportunity_response ) );
+
+		$GF_ConnectWise->expects( $this->at( 7 ) )
+			->method( "send_request" )
+			->with(
+				"sales/opportunities/1/notes",
+				"POST",
+				$note_data
+			)
+			->will( $this->returnValue( $mock_opportunity_response ) );
+
+		$GF_ConnectWise->process_feed( $feed, $lead, array() );
+	}
+
+	function test_sent_activity_subject_field_should_escape_special_character() {
+		$feed = array (
+				"id"        => "1",
+				"form_id"   => "1",
+				"is_active" => "1",
+				"meta"      => array(
+					"contact_map_fields_first_name" => "2.3",
+					"contact_map_fields_last_name"  => "2.6",
+					"contact_map_fields_email"      => "3",
+					"create_opportunity"            => "1",
+					"opportunity_name"              => "Can&#039;t translate",
+					"create_activity"               => "1",
+					"activity_name"                 => "Let&#039;s Follow up the client",
+					"company_map_fields"            => array(),
+				)
+			);
+
+			$lead = array(
+				"2.3" => "Alita",
+				"2.6" => "Fobs",
+				"3"   => "alita@gmail.com",
+			);
+
+			$dueDate = mktime( 0, 0, 0, date( "m" ), date( "d" ) + 7, date( "y" ) );
+			$dueDate = date( "Y-m-d", $dueDate );
+
+			$activity_data = array(
+				"name"        => "Let's Follow up the client",
+				"email"       => "alita@gmail.com",
+				"type"        => array( "id" => "" ),
+				"company"     => array(
+					"id"         => "",
+					"identifier" => "Catchall"
+				),
+				"contact"     => array(
+					"id"   => "",
+					"name" => " "
+				),
+				"status"      => array(
+					"name" => "Open"
+				),
+				"assignTo"    => array(
+					"identifier" => ""
+				),
+				"opportunity" => array(
+					"id"   => "",
+					"name" => ""
+				),
+				"dateStart"   => $dueDate . "T14:00:00Z",
+				"dateEnd"     => $dueDate . "T14:15:00Z"
+			);
+
+			$mock_activity_data     = '{
+				"id":1,
+				"name":"Let\'s Follow up the client",
+			}';
+			$mock_activity_response = array(
+				"body" => $mock_activity_data
+			);
+
+
+			$GF_ConnectWise = $this->getMockBuilder( "GFConnectWise" )
+				->setMethods( array( "send_request", "get_existing_contact", "is_valid_settings" ) )
+				->getMock();
+
+			$GF_ConnectWise->expects( $this->at( 7 ) )
+				->method( "send_request" )
+				->with(
+					"sales/activities",
+					"POST",
+					$activity_data
+				)
+				->will( $this->returnValue( $mock_activity_response ) );
+
+			$GF_ConnectWise->process_feed( $feed, $lead, array() );
+	}
+
+	function test_sent_activity_note_field_should_escape_special_character() {
+				$feed = array (
+				"id"        => "1",
+				"form_id"   => "1",
+				"is_active" => "1",
+				"meta"      => array(
+					"contact_map_fields_first_name" => "2.3",
+					"contact_map_fields_last_name"  => "2.6",
+					"contact_map_fields_email"      => "3",
+					"create_opportunity"            => "1",
+					"opportunity_name"              => "Can&#039;t translate",
+					"create_activity"               => "1",
+					"activity_name"                 => "Let&#039;s Follow up the client",
+					"activity_note"	                => "It&#039;s a note",
+					"company_map_fields"            => array(),
+				)
+			);
+
+			$lead = array(
+				"2.3" => "Alita",
+				"2.6" => "Fobs",
+				"3"   => "alita@gmail.com",
+			);
+
+			$dueDate = mktime( 0, 0, 0, date( "m" ), date( "d" ) + 7, date( "y" ) );
+			$dueDate = date( "Y-m-d", $dueDate );
+
+			$activity_data = array(
+				"name"        => "Let's Follow up the client",
+				"email"       => "alita@gmail.com",
+				"type"        => array( "id" => "" ),
+				"company"     => array(
+					"id"         => "",
+					"identifier" => "Catchall"
+				),
+				"contact"     => array(
+					"id"   => "",
+					"name" => " "
+				),
+				"status"      => array(
+					"name" => "Open"
+				),
+				"assignTo"    => array(
+					"identifier" => ""
+				),
+				"opportunity" => array(
+					"id"   => "",
+					"name" => ""
+				),
+				"notes"       => "It's a note",
+				"dateStart"   => $dueDate . "T14:00:00Z",
+				"dateEnd"     => $dueDate . "T14:15:00Z"
+			);
+
+			$mock_activity_data     = '{
+				"id":1,
+				"name":"Let\'s Follow up the client",
+				"notes":"It\'s a note"
+			}';
+			$mock_activity_response = array(
+				"body" => $mock_activity_data
+			);
+
+			$GF_ConnectWise = $this->getMockBuilder( "GFConnectWise" )
+				->setMethods( array( "send_request", "get_existing_contact", "is_valid_settings" ) )
+				->getMock();
+
+			$GF_ConnectWise->expects( $this->at( 7 ) )
+				->method( "send_request" )
+				->with(
+					"sales/activities",
+					"POST",
+					$activity_data
+				)
+				->will( $this->returnValue( $mock_activity_response ) );
+
+			$GF_ConnectWise->process_feed( $feed, $lead, array() );
+	}
+
+	function test_sent_service_ticket_summary_field_should_escape_special_character() {
+		$feed = array (
+				"id"        => "1",
+				"form_id"   => "1",
+				"is_active" => "1",
+				"meta"      => array(
+					"create_service_ticket"         => "1",
+					"service_ticket_summary"        => "Service&#039;s Ticket Name",
+					"contact_map_fields_first_name" => "2.3",
+					"contact_map_fields_last_name"  => "2.6",
+					"contact_map_fields_email"      => "3",
+					"company_map_fields"            => array(),
+				)
+		);
+
+		$lead = array(
+			"2.3" => "Alita",
+			"2.6" => "Fobs",
+			"3"   => "alita@gmail.com",
+		);
+
+		$ticket_data = array(
+			"summary"            => "Service's Ticket Name",
+			"initialDescription" => "",
+			"company"            => array(
+				"id"         =>  "",
+				"identifier" => "Catchall",
+			),
+			"type"               => array( "id" => "" ),
+			"subtype"            => array( "id" => "" ),
+			"item"               => array( "id" => "" ),
+		);
+
+		$mock_ticket_data     = '{
+			"id":1,
+			"summary":"Service\'s Ticket Name",
+		}';
+		$mock_ticket_response = array(
+			"body" => $mock_ticket_data
+		);
+
+		$GF_ConnectWise = $this->getMockBuilder( "GFConnectWise" )
+			->setMethods( array( "send_request", "get_existing_contact", "is_valid_settings" ) )
+			->getMock();
+
+		$GF_ConnectWise->expects( $this->at( 5 ) )
+			->method( "send_request" )
+			->with(
+				"service/tickets",
+				"POST",
+				$ticket_data
+			)
+			->will( $this->returnValue( $mock_ticket_response ) );
+
+		$GF_ConnectWise->process_feed( $feed, $lead, array() );
+	}
+
+	function test_sent_service_ticket_initial_description_should_escape_special_character() {
+		$feed = array (
+			"id"        => "1",
+			"form_id"   => "1",
+			"is_active" => "1",
+			"meta"      => array(
+				"create_service_ticket"              => "1",
+				"service_ticket_summary"             => "Service's Ticket Name",
+				"service_ticket_initial_description" => "It&#039;s Just an init",
+				"contact_map_fields_first_name"      => "2.3",
+				"contact_map_fields_last_name"       => "2.6",
+				"contact_map_fields_email"           => "3",
+				"company_map_fields"                 => array(),
+			)
+		);
+
+		$lead = array(
+			"2.3" => "Alita",
+			"2.6" => "Fobs",
+			"3"   => "alita@gmail.com",
+		);
+
+		$ticket_data = array(
+			"summary"        => "Service's Ticket Name",
+			"initialDescription" => "It's Just an init",
+			"company"        => array(
+				"id"         =>  "",
+				"identifier" => "Catchall",
+			),
+			"type"           => array( "id" => "" ),
+			"subtype"        => array( "id" => "" ),
+			"item"           => array( "id" => "" ),
+		);
+
+		$mock_ticket_data     = '{
+			"id":1,
+			"summary":"Service\'s Ticket Name",
+		}';
+		$mock_ticket_response = array(
+			"body" => $mock_ticket_data
+		);
+
+		$GF_ConnectWise = $this->getMockBuilder( "GFConnectWise" )
+			->setMethods( array( "send_request", "get_existing_contact", "is_valid_settings" ) )
+			->getMock();
+
+		$GF_ConnectWise->expects( $this->at( 5 ) )
+			->method( "send_request" )
+			->with(
+				"service/tickets",
+				"POST",
+				$ticket_data
+			)
+			->will( $this->returnValue( $mock_ticket_response ) );
+
+		$GF_ConnectWise->process_feed( $feed, $lead, array() );
+	}
+
+	function test_sent_company_note_should_escape_special_charcter() {
+		$feed = array (
+			"id"        => "1",
+			"form_id"   => "1",
+			"is_active" => "1",
+			"meta"      => array(
+				"contact_map_fields_first_name" => "2.3",
+				"contact_map_fields_last_name"  => "2.6",
+				"contact_map_fields_email"      => "3",
+				"company_note"                  => "It&#039;s Company Note",
+				"company_map_fields"            => array(),
+			)
+		);
+
+		$lead = array(
+			"2.3" => "Alita",
+			"2.6" => "Fobs",
+			"3"   => "alita@gmail.com",
+		);
+
+		$mock_company_response = array(
+			"body" => '[{"id":1}]'
+		);
+
+		$mock_company_note_data = '{
+			"id":1,
+			"text":"It\'s Company Note"
+		}';
+
+		$mock_company_note_response = array(
+			"body" => $mock_company_note_data
+		);
+
+		$company_note = array(
+			"text" => "It's Company Note"
+		);
+
+		$GF_ConnectWise = $this->getMockBuilder( "GFConnectWise" )
+			->setMethods( array( "send_request", "get_existing_contact", "is_valid_settings" ) )
+			->getMock();
+
+		$GF_ConnectWise->expects( $this->at( 4 ) )
+			->method( "send_request" )
+			->with(
+				"company/companies?conditions=identifier='Catchall'",
+				"GET",
+				NULL
+			)
+			->will( $this->returnValue( $mock_company_response ) );
+
+
+		$GF_ConnectWise->expects( $this->at( 5 ) )
+			->method( "send_request" )
+			->with(
+				"company/companies/1/notes",
+				"POST",
+				$company_note
+			)
+			->will( $this->returnValue( $mock_company_note_response ) );
+
+		$GF_ConnectWise->process_feed( $feed, $lead, array() );
+	}
+
+	function test_sent_contact_note_should_escape_special_character() {
+		$feed = array(
+			"id"        => "1",
+			"form_id"   => "1",
+			"is_active" => "1",
+			"meta"      => array(
+				"contact_map_fields_first_name" => "2.3",
+				"contact_map_fields_last_name"  => "2.6",
+				"contact_map_fields_email"      => "3",
+				"contact_type"                  => "1",
+				"contact_department"            => "2",
+				"company_type"                  => "1",
+				"company_status"                => "1",
+				"contact_note"                  => "Can&#039;t help",
+				"company_map_fields"            => array(
+					array(
+						"key"        => "company",
+						"value"      => "2",
+						"custom_key" => ""
+					)
+				)
+			)
+		);
+
+		$lead = array(
+			"2.3" => "Alita",
+			"2.6" => "Fobs",
+			"3"   => "alita@gmail.com",
+		);
+
+		$contact_data = array(
+			"firstName"          => "Alita",
+			"lastName"           => "Fobs",
+			"company"            => array(
+				"identifier" => "Catchall",
+			),
+			"type"               => array( "id" => "1" ),
+			"department"         => array( "id" => "2" )
+		);
+
+		$mock_contact_data = '{"id":1}';
+		$mock_contact_response = array(
+			"body" => $mock_contact_data
+		);
+
+		$mock_contact_note_data = '{
+			"id":1,
+			"text": "Can\'t help"
+		}';
+		$mock_contact_note_response = array(
+			"body" => $mock_contact_note_data
+		);
+
+		$note_data = array(
+			"text" => "Can't help"
+		);
+
+		$GF_ConnectWise = $this->getMockBuilder( "GFConnectWise" )
+			->setMethods( array( "send_request", "get_existing_contact", "is_valid_settings" ) )
+			->getMock();
+
+		$GF_ConnectWise->expects( $this->at( 2 ) )
+			->method( "send_request" )
+			->with(
+				"company/contacts",
+				"POST",
+				$contact_data
+			)
+			->will( $this->returnValue( $mock_contact_response ) );
+
+
+		$GF_ConnectWise->expects( $this->at( 4 ) )
+			->method( "send_request" )
+			->with(
+				"company/contacts/1/notes",
+				"POST",
+				$note_data
+			)
+			->will( $this->returnValue( $mock_contact_note_response ) );
+
+		$GF_ConnectWise->process_feed( $feed, $lead, array() );
 	}
 }
