@@ -18,6 +18,9 @@ To run, test, and develop the Multisite Login Logos plugin with Docker container
 Changelog
 ----------
 
+= 1.5.1 =
+* Escape special characters when send data to ConnectWise.
+
 = 1.5.0 =
 * Support ConnectWise API version 2018.6.
 
