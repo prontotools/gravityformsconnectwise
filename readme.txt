@@ -12,7 +12,9 @@ Integrates Gravity Forms with ConnectWise, allowing form submissions to be autom
 
 == Description ==
 
-**Hands down the best solution to integrate the forms on your website with ConnectWise**
+**WE HAVE PAUSED SUPPORT OF THIS PLUGIN. YOU ARE WELCOME TO SUBMIT BUGS TO THE FORUM, BUT IT IS CURRENTLY NOT MANNED.**
+
+Hands down the best solution to integrate the forms on your website with ConnectWise
 
 Allows you to:
 
