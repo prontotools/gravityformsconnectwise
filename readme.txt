@@ -1,5 +1,5 @@
 === Gravity Forms ConnectWise Add-On ===
-Contributors: prontotools, oynp
+Contributors: prontotools, zkancs, sandsine
 Tags: connectwise, gravity forms, add-on, contact form, integration, psa, lead, marketing automation
 Requires at least: 4.0
 Tested up to: 4.9.6
@@ -11,8 +11,6 @@ License URI: http://www.gnu.org/licenses/gpl-3.0.html
 Integrates Gravity Forms with ConnectWise, allowing form submissions to be automatically sent to your ConnectWise account.
 
 == Description ==
-
-**WE HAVE PAUSED SUPPORT OF THIS PLUGIN. YOU ARE WELCOME TO SUBMIT BUGS TO THE FORUM, BUT IT IS CURRENTLY NOT MANNED.**
 
 Hands down the best solution to integrate the forms on your website with ConnectWise
 
