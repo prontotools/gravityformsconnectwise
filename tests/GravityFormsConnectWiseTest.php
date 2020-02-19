@@ -43,7 +43,7 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
 	function test_addon_settings_should_have_fields() {
 		$actual = $this->connectwise_plugin->plugin_settings_fields();
 
-		$this->assertEquals( count( $actual[0]["fields"] ), 4 );
+		$this->assertEquals( count( $actual[0]["fields"] ), 5 );
 
 		$expected_description  = "<p>Complete the settings below to authenticate with your ConnectWise account. ";
 		$expected_description .= '<a href="https://pronto.zendesk.com/hc/en-us/articles/207946586" target="_blank">';
@@ -79,6 +79,13 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
 		$this->assertEquals( $actual[0]["fields"][3]["class"], "small" );
 		$this->assertTrue( array_key_exists( "save_callback", $actual[0]["fields"][3] ) );
 		$this->assertTrue( array_key_exists( "feedback_callback", $actual[0]["fields"][3] ) );
+
+		$this->assertEquals( $actual[0]["fields"][4]["name"], "client_id" );
+		$this->assertEquals( $actual[0]["fields"][4]["label"], "Client ID" );
+		$this->assertEquals( $actual[0]["fields"][4]["type"], "text" );
+		$this->assertEquals( $actual[0]["fields"][4]["class"], "small" );
+		$this->assertTrue( array_key_exists( "save_callback", $actual[0]["fields"][4] ) );
+		$this->assertTrue( array_key_exists( "feedback_callback", $actual[0]["fields"][4] ) );
 
 		$this->assertEquals( count( $actual[1]["fields"] ), 2 );
 
@@ -4592,6 +4599,7 @@ class GravityFormsConnectWiseAddOnTest extends WP_UnitTestCase {
 			"company_id"                        => "",
 			"public_key"                        => "",
 			"private_key"                       => "",
+			"client_id"							=> "",
 			"enable_error_notification_emails"  => "1",
 			"error_notification_emails_to"      => "test@mail.com"
 		);

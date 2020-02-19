@@ -71,6 +71,8 @@ You can view a [detailed flow chart of the process here](https://pronto.bypronto
 5. Enable conditional logic to have a feed send data only for specific events.
 
 == Changelog ==
+= 1.6.0 =
+* Support ConnectWise API version 2020.1
 
 = 1.5.1 =
 * Escape special characters when send data to ConnectWise.

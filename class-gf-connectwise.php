@@ -1305,6 +1305,14 @@ class GFConnectWise extends GFFeedAddOn {
 						'class'             => 'small',
 						'save_callback'     => array( $this, 'clean_field' ),
 						'feedback_callback' => array( $this, 'is_valid_settings' )
+					),
+					array(
+						'name'              => 'client_id',
+						'label'             => 'Client ID',
+						'type'              => 'text',
+						'class'             => 'small',
+						'save_callback'     => array( $this, 'clean_field' ),
+						'feedback_callback' => array( $this, 'is_valid_settings' )
 					)
 				)
 			),
@@ -1417,9 +1425,10 @@ class GFConnectWise extends GFFeedAddOn {
 			$this->log_debug( __METHOD__ . '(): body => ' . json_encode( $body, JSON_PRETTY_PRINT ) );
 		}
 
-		$company_id  = $this->get_plugin_setting( 'company_id' );
-		$public_key  = $this->get_plugin_setting( 'public_key' );
-		$private_key = $this->get_plugin_setting( 'private_key' );
+		$company_id        = $this->get_plugin_setting( 'company_id' );
+		$public_key        = $this->get_plugin_setting( 'public_key' );
+		$private_key       = $this->get_plugin_setting( 'private_key' );
+		$client_id         = $this->get_plugin_setting( 'client_id' );
 		$enable_error_mail = $this->get_plugin_setting( 'enable_error_notification_emails' );
 
 		$args = array(
@@ -1430,7 +1439,8 @@ class GFConnectWise extends GFFeedAddOn {
 				'Accept'           => 'application/vnd.connectwise.com+json;',
 				'Content-type'     => 'application/json' ,
 				'Authorization'    => 'Basic ' . base64_encode( $company_id . '+' . $public_key  . ':' . $private_key ),
-				'X-cw-overridessl' => 'True'
+				'X-cw-overridessl' => 'True',
+                'clientId'         => $client_id
 			)
 		);
 		if ( $body ) {

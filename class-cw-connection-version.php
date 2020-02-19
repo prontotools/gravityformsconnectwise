@@ -35,6 +35,7 @@ class ConnectWiseVersion extends GFAddOn {
         $company_id  = $this->get_plugin_setting( "company_id" );
         $public_key  = $this->get_plugin_setting( "public_key" );
         $private_key = $this->get_plugin_setting( "private_key" );
+        $client_id   = $this->get_plugin_setting( "client_id" );
 
         $args = array(
             "method"  => "GET",
@@ -43,7 +44,8 @@ class ConnectWiseVersion extends GFAddOn {
                 "Accept"           => "application/vnd.connectwise.com+json; version=v2015_3",
                 "Content-type"     => "application/json" ,
                 "Authorization"    => "Basic " . base64_encode( $company_id . "+" . $public_key  . ":" . $private_key ),
-                "X-cw-overridessl" => "True"
+                "X-cw-overridessl" => "True",
+                "clientId"         => $client_id,
             )
         );
         $response = wp_remote_request( $url, $args );
