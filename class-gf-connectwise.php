@@ -1428,7 +1428,7 @@ class GFConnectWise extends GFFeedAddOn {
 		$company_id        = $this->get_plugin_setting( 'company_id' );
 		$public_key        = $this->get_plugin_setting( 'public_key' );
 		$private_key       = $this->get_plugin_setting( 'private_key' );
-        $client_id         = $this->get_plugin_setting( 'client_id' );
+		$client_id         = $this->get_plugin_setting( 'client_id' );
 		$enable_error_mail = $this->get_plugin_setting( 'enable_error_notification_emails' );
 
 		$args = array(

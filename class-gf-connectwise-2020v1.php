@@ -24,8 +24,8 @@ class GFConnectWise2020v1 extends GFConnectWise {
 
 		foreach ( $cw_team_members as $each_member ) {
 			$member = array(
-					'label' => esc_html__( $each_member->firstName . ' ' . $each_member->lastName, 'gravityformsconnectwise' ),
-					'value' => $each_member->identifier
+				'label' => esc_html__( $each_member->firstName . ' ' . $each_member->lastName, 'gravityformsconnectwise' ),
+				'value' => $each_member->identifier
 			);
 			array_push( $team_members_list, $member );
 		}
