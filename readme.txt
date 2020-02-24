@@ -1,5 +1,5 @@
 === Gravity Forms ConnectWise Add-On ===
-Contributors: prontotools, zkancs, sandsine
+Contributors: prontotools, zkancs, sandsine, saowaluck
 Tags: connectwise, gravity forms, add-on, contact form, integration, psa, lead, marketing automation
 Requires at least: 4.0
 Tested up to: 4.9.6
