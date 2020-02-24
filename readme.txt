@@ -72,7 +72,8 @@ You can view a [detailed flow chart of the process here](https://pronto.bypronto
 
 == Changelog ==
 = 1.6.0 =
-* Support ConnectWise API version 2020.1
+* Support ConnectWise API version 2020.1.
+* Allow users to enter the ConnectWise Client ID.
 
 = 1.5.1 =
 * Escape special characters when send data to ConnectWise.
