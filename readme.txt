@@ -1,5 +1,5 @@
 === Gravity Forms ConnectWise Add-On ===
-Contributors: prontotools, zkancs, sandsine
+Contributors: prontotools, zkancs, sandsine, saowaluck
 Tags: connectwise, gravity forms, add-on, contact form, integration, psa, lead, marketing automation
 Requires at least: 4.0
 Tested up to: 4.9.6
@@ -72,7 +72,8 @@ You can view a [detailed flow chart of the process here](https://pronto.bypronto
 
 == Changelog ==
 = 1.6.0 =
-* Support ConnectWise API version 2020.1
+* Support ConnectWise API version 2020.1.
+* Allow users to enter the ConnectWise Client ID.
 
 = 1.5.1 =
 * Escape special characters when send data to ConnectWise.
